@@ -1,0 +1,23 @@
+language: haxe
+
+haxe:
+  - 3.4.7
+  - development
+
+install:
+  - haxelib git hxparse https://github.com/Simn/hxparse --never
+  - haxelib git haxeparser https://github.com/Simn/haxeparser --never
+  - haxelib git hxargs https://github.com/Simn/hxargs --never
+  - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
+  - haxelib git mcover https://github.com/massiveinteractive/mcover master src
+  - haxelib git munit https://github.com/massiveinteractive/MassiveUnit master src
+  - haxelib git json2object https://github.com/elnabo/json2object
+  - haxelib install tokentree
+  - haxelib install formatter
+  - haxelib install hxjava
+  - haxelib install hxcs
+
+script:
+  - haxe buildAll.hxml
+  - chmod 755 benchmark.sh
+  - ./benchmark.sh

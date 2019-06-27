@@ -1,0 +1,51 @@
+buildCommon.hxml
+-cpp out/cpp
+
+--next
+
+buildCommon.hxml
+-java out/java
+
+--next
+
+buildCommon.hxml
+-D jvm
+-java out/jvm
+
+--next
+
+buildCommon.hxml
+-cs out/cs
+
+--next
+
+buildCommon.hxml
+-D hl_ver=1.9.0
+-hl out/formatter.hl
+
+--next
+
+buildCommon.hxml
+-python out/formatter.py
+
+--next
+
+buildCommon.hxml
+-D php7
+-php out/php
+
+--next
+
+buildCommon.hxml
+-lib hxnodejs
+-js out/formatter.js
+
+--next
+
+buildCommon.hxml
+-neko out/formatter.n
+
+--next
+
+buildCommon.hxml
+-lua out/formatter.lua
