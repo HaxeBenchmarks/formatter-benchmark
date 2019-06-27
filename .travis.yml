@@ -6,7 +6,7 @@ haxe:
 
 before_install:
   - sudo apt-get update
-  - sudo pt-get -y install libpng-dev libturbojpeg-dev libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
+  - sudo apt-get -y install libpng-dev libturbojpeg-dev libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
 
 install:
   - haxelib git hxparse https://github.com/Simn/hxparse --never
