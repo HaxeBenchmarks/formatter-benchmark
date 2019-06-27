@@ -18,6 +18,12 @@ install:
   - haxelib install hxcs
 
 script:
+  - mkdir formatter && cd formatter && git clone https://github.com/HaxeCheckstyle/haxe-formatter.git 
+  - cp formatter/haxe-formatter/haxelib.json .
+  - mkdir data
+  - cd data && git clone https://github.com/HaxeFoundation/haxe.git
+  - cd data && git clone https://github.com/openfl/openfl.git
+  - cd data && git clone https://github.com/openfl/lime.git
   - haxe buildAll.hxml
   - chmod 755 benchmark.sh
-  - ./benchmark.sh
+  - ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src
