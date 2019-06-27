@@ -29,10 +29,10 @@ matrix:
       - haxelib install hxcs
 
 script:
-  - haxe buildAll.hxml
   # - (git clone https://github.com/HaxeFoundation/hashlink.git && cd hashlink && make)
   - git clone https://github.com/HaxeCheckstyle/haxe-formatter.git
   - cp haxe-formatter/haxelib.json .
+  - haxe buildAll.hxml
   - mkdir data
   - (cd data && git clone https://github.com/HaxeFoundation/haxe.git)
   - (cd data && git clone https://github.com/openfl/openfl.git)
