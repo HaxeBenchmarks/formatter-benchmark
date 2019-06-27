@@ -4,26 +4,30 @@ haxe:
   - 3.4.7
   - development
 
+before_install:
+  - sudo apt-get update
+  - sudo pt-get -y install libpng-dev libturbojpeg-dev libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
+
 install:
   - haxelib git hxparse https://github.com/Simn/hxparse --never
   - haxelib git haxeparser https://github.com/Simn/haxeparser --never
   - haxelib git hxargs https://github.com/Simn/hxargs --never
   - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
-  - haxelib git mcover https://github.com/massiveinteractive/mcover master src
-  - haxelib git munit https://github.com/massiveinteractive/MassiveUnit master src
   - haxelib git json2object https://github.com/elnabo/json2object
   - haxelib install tokentree
   - haxelib install formatter
+  - haxelib install hxcpp
   - haxelib install hxjava
   - haxelib install hxcs
 
 script:
-  - mkdir formatter && mkdir data
-  - (cd formatter && git clone https://github.com/HaxeCheckstyle/haxe-formatter.git)
-  - cp formatter/haxe-formatter/haxelib.json .
+  -  mkdir data
+  - (git clone https://github.com/HaxeFoundation/hashlink.git && cd hashlink && make)
+  - git clone https://github.com/HaxeCheckstyle/haxe-formatter.git
+  - cp haxe-formatter/haxelib.json .
   - (cd data && git clone https://github.com/HaxeFoundation/haxe.git)
   - (cd data && git clone https://github.com/openfl/openfl.git)
   - (cd data && git clone https://github.com/openfl/lime.git)
   - haxe buildAll.hxml
   - chmod 755 benchmark.sh
-  - ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src
+  - export HL_BINARY=hashlink/hl ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src
