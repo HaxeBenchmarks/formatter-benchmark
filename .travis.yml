@@ -4,9 +4,9 @@ haxe:
   - 3.4.7
   - development
 
-before_install:
-  - sudo apt-get update
-  - sudo apt-get -y install libpng-dev libturbojpeg-dev libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
+# before_install:
+#   - sudo apt-get update
+#   - sudo apt-get -y install libpng-dev libturbojpeg0-dev libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
 
 install:
   - haxelib git hxparse https://github.com/Simn/hxparse --never
@@ -21,10 +21,10 @@ install:
   - haxelib install hxcs
 
 script:
-  -  mkdir data
-  - (git clone https://github.com/HaxeFoundation/hashlink.git && cd hashlink && make)
+  # - (git clone https://github.com/HaxeFoundation/hashlink.git && cd hashlink && make)
   - git clone https://github.com/HaxeCheckstyle/haxe-formatter.git
   - cp haxe-formatter/haxelib.json .
+  -  mkdir data
   - (cd data && git clone https://github.com/HaxeFoundation/haxe.git)
   - (cd data && git clone https://github.com/openfl/openfl.git)
   - (cd data && git clone https://github.com/openfl/lime.git)
