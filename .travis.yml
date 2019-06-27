@@ -24,7 +24,7 @@ matrix:
       - haxelib git json2object https://github.com/elnabo/json2object
       - haxelib install tokentree
       - haxelib install formatter
-      - haxelib install hxcpp
+      - haxelib install hxcpp 4.0.8
       - haxelib install hxjava
       - haxelib install hxcs
 
