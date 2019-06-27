@@ -13,5 +13,5 @@ java -jar out/jvm/Cli.jar $DATA
 neko out/formatter.n $DATA
 php out/php/index.php $DATA
 python3 out/formatter.py $DATA
-mono out/cs/bin/Cli.exe $DATA
-lua out/formatter.lua $DATA
+# mono out/cs/bin/Cli.exe $DATA
+# lua out/formatter.lua $DATA

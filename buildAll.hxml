@@ -12,10 +12,10 @@ buildCommon.hxml
 -D jvm
 -java out/jvm
 
---next
+# --next
 
-buildCommon.hxml
--cs out/cs
+# buildCommon.hxml
+# -cs out/cs
 
 --next
 
@@ -45,7 +45,7 @@ buildCommon.hxml
 buildCommon.hxml
 -neko out/formatter.n
 
---next
+# --next
 
-buildCommon.hxml
--lua out/formatter.lua
+# buildCommon.hxml
+# -lua out/formatter.lua
