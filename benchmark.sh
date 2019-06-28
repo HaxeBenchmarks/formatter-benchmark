@@ -18,8 +18,8 @@ resetGit
 # resetGit
 neko out/formatter.n $DATA
 resetGit
-# php out/php/index.php $DATA
-# resetGit
+php out/php/index.php $DATA
+resetGit
 python3 out/formatter.py $DATA
 # resetGit
 # mono out/cs/bin/Cli.exe $DATA
