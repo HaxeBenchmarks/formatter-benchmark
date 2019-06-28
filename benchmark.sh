@@ -14,8 +14,8 @@ java -jar out/java/Cli.jar $DATA
 resetGit
 java -jar out/jvm/Cli.jar $DATA
 resetGit
-# $HL_BINARY out/formatter.hl $DATA
-# resetGit
+$HL_BINARY out/formatter.hl $DATA
+resetGit
 php out/php/index.php $DATA
 resetGit
 neko out/formatter.n $DATA
