@@ -16,7 +16,7 @@ matrix:
       # - git clone git://github.com/phpenv/phpenv.git phpenv && chmod 755 phpenv/bin/phpenv
       - curl -s -o archive.tar.bz2 https://storage.googleapis.com/travis-ci-language-archives/php/binaries/ubuntu/16.04/x86_64/php-7.3.tar.bz2 && tar xjf archive.tar.bz2 --directory /
       - ~/.phpenv/bin/phpenv global 7.3
-      - (git clone https://github.com/HaxeFoundation/hashlink --depth 1 && cd hashlink && make && make install && hl --version)
+      - (git clone https://github.com/HaxeFoundation/hashlink --depth 1 && cd hashlink && make && sudo make install && hl --version)
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - (git clone https://github.com/Simn/haxeparser && cd haxeparser && git checkout 48160b190cacafb0003d0c8d085dca2c85e21e31 && haxelib dev haxeparser .)
       - haxelib git hxargs https://github.com/Simn/hxargs --never
@@ -35,7 +35,7 @@ matrix:
       # - git clone git://github.com/phpenv/phpenv.git phpenv && chmod 755 phpenv/bin/phpenv
       - curl -s -o archive.tar.bz2 https://storage.googleapis.com/travis-ci-language-archives/php/binaries/ubuntu/16.04/x86_64/php-7.3.tar.bz2 && tar xjf archive.tar.bz2 --directory /
       - ~/.phpenv/bin/phpenv global 7.3
-      - (git clone https://github.com/HaxeFoundation/hashlink --depth 1 && cd hashlink && make && make install && hl --version)
+      - (git clone https://github.com/HaxeFoundation/hashlink --depth 1 && cd hashlink && make && sudo make install && hl --version)
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - haxelib git haxeparser https://github.com/Simn/haxeparser --never
       - haxelib git hxargs https://github.com/Simn/hxargs --never
@@ -60,4 +60,4 @@ script:
   - (cd data && git clone https://github.com/openfl/openfl.git --depth 1)
   - (cd data && git clone https://github.com/openfl/lime.git --depth 1)
   - chmod 755 benchmark.sh
-  - HL_BINARY=hashlink/hl ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src
+  - HL_BINARY=/usr/local/bin/hl ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src
