@@ -2,9 +2,6 @@ dist: xenial
 
 language: haxe
 
-# before_script:
-#   - phpenv config-rm xdebug.ini
-
 matrix:
   include:
     - haxe: 3.4.7
@@ -42,6 +39,9 @@ matrix:
       - haxelib install hxcpp 4.0.8
       - haxelib install hxjava
       - haxelib install hxcs
+
+before_script:
+  - phpenv config-rm xdebug.ini
 
 script:
   # - (git clone https://github.com/HaxeFoundation/hashlink.git && cd hashlink && make)
