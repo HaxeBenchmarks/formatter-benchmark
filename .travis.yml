@@ -11,6 +11,7 @@ language:
 matrix:
   include:
     - haxe: 3.4.7
+      php: 7.3
       install:
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - (git clone https://github.com/Simn/haxeparser && cd haxeparser && git checkout 48160b190cacafb0003d0c8d085dca2c85e21e31 && haxelib dev haxeparser .)
@@ -24,6 +25,7 @@ matrix:
       - haxelib install hxjava
       - haxelib install hxcs
     - haxe: development
+      php: 7.3
       install:
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - haxelib git haxeparser https://github.com/Simn/haxeparser --never
