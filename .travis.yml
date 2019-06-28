@@ -13,10 +13,9 @@ matrix:
       php: 7.3
       mono: latest
       install:
-      # - git clone git://github.com/phpenv/phpenv.git phpenv && chmod 755 phpenv/bin/phpenv
       - curl -s -o archive.tar.bz2 https://storage.googleapis.com/travis-ci-language-archives/php/binaries/ubuntu/16.04/x86_64/php-7.3.tar.bz2 && tar xjf archive.tar.bz2 --directory /
       - ~/.phpenv/bin/phpenv global 7.3
-      - (git clone https://github.com/HaxeFoundation/hashlink && cd hashlink && git checkout f9ac7acdb2d82661d9d77c1a44972e90cc331b98 && make && sudo make install && hl --version)
+      - (git clone https://github.com/HaxeFoundation/hashlink && cd hashlink && git checkout f9ac7acdb2d82661d9d77c1a44972e90cc331b98 && make all && sudo make install_libs && cp hl /usr/local/bin/ && hl --version)
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - (git clone https://github.com/Simn/haxeparser && cd haxeparser && git checkout 48160b190cacafb0003d0c8d085dca2c85e21e31 && haxelib dev haxeparser .)
       - haxelib git hxargs https://github.com/Simn/hxargs --never
@@ -32,7 +31,6 @@ matrix:
       php: 7.3
       mono: latest
       install:
-      # - git clone git://github.com/phpenv/phpenv.git phpenv && chmod 755 phpenv/bin/phpenv
       - curl -s -o archive.tar.bz2 https://storage.googleapis.com/travis-ci-language-archives/php/binaries/ubuntu/16.04/x86_64/php-7.3.tar.bz2 && tar xjf archive.tar.bz2 --directory /
       - ~/.phpenv/bin/phpenv global 7.3
       - (git clone https://github.com/HaxeFoundation/hashlink --depth 1 && cd hashlink && make && sudo make install && hl --version)
@@ -51,7 +49,6 @@ before_script:
   - phpenv config-rm xdebug.ini
 
 script:
-  # - (git clone https://github.com/HaxeFoundation/hashlink.git && cd hashlink && make)
   - git clone https://github.com/HaxeCheckstyle/haxe-formatter.git --depth 1
   - cp haxe-formatter/haxelib.json .
   - haxe buildAll.hxml
