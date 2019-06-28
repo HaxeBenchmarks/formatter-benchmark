@@ -16,14 +16,14 @@ java -jar out/java/Cli.jar $DATA
 resetGit
 java -jar out/jvm/Cli.jar $DATA
 resetGit
-$HL_BINARY out/formatter.hl $DATA
+/usr/local/bin/hl out/formatter.hl $DATA
 resetGit
 php out/php/index.php $DATA
 resetGit
 neko out/formatter.n $DATA
 resetGit
 python3 out/formatter.py $DATA
-resetGit
-mono out/cs/bin/Cli.exe $DATA
+# resetGit
+# mono out/cs/bin/Cli.exe $DATA
 # resetGit
 # lua out/formatter.lua $DATA
