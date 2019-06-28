@@ -4,7 +4,6 @@ language: haxe
 
 before_install:
   - sudo apt-get update
-  - apt-cache search libturbo
   - sudo apt-get install -y libpng-dev libjpeg-turbo8-dev libturbojpeg libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
   - sudo ln -s /usr/lib/x86_64-linux-gnu/libturbojpeg.so.0 /usr/lib/x86_64-linux-gnu/libturbojpeg.so
 
@@ -19,7 +18,7 @@ matrix:
       - ~/.phpenv/bin/phpenv global 7.3
       - (git clone https://github.com/HaxeFoundation/hashlink --depth 1 && cd hashlink && make && ./hl --version)
       - haxelib git hxparse https://github.com/Simn/hxparse --never
-      - (git clone https://github.com/Simn/haxeparser --depth 1 && cd haxeparser && git checkout 48160b190cacafb0003d0c8d085dca2c85e21e31 && haxelib dev haxeparser .)
+      - (git clone https://github.com/Simn/haxeparser && cd haxeparser && git checkout 48160b190cacafb0003d0c8d085dca2c85e21e31 && haxelib dev haxeparser .)
       - haxelib git hxargs https://github.com/Simn/hxargs --never
       - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
       - haxelib git json2object https://github.com/elnabo/json2object
