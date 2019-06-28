@@ -11,7 +11,7 @@ matrix:
       php: 7.3
       mono: latest
       install:
-      - phpenv 7.3
+      - git clone git://github.com/phpenv/phpenv.git && chmod 755 phpenv/bin/phpenv && phpenv/bin/phpenv global 7.3
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - (git clone https://github.com/Simn/haxeparser && cd haxeparser && git checkout 48160b190cacafb0003d0c8d085dca2c85e21e31 && haxelib dev haxeparser .)
       - haxelib git hxargs https://github.com/Simn/hxargs --never
@@ -27,7 +27,7 @@ matrix:
       php: 7.3
       mono: latest
       install:
-      - phpenv 7.3
+      - git clone git://github.com/phpenv/phpenv.git && chmod 755 phpenv/bin/phpenv && phpenv/bin/phpenv global 7.3
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - haxelib git haxeparser https://github.com/Simn/haxeparser --never
       - haxelib git hxargs https://github.com/Simn/hxargs --never
