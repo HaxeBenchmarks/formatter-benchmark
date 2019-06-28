@@ -3,6 +3,8 @@ dist: xenial
 language: haxe
 
 before_install:
+  - sudo apt-get update
+  - apt-cache search libturbo
   - sudo apt-get install -y libpng-dev libturbojpeg-dev libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
 
 matrix:
