@@ -5,9 +5,9 @@ language:
   - php
   - csharp
 
-before_script:
-  - phpenv config-rm xdebug.ini
-  
+# before_script:
+#   - phpenv config-rm xdebug.ini
+
 matrix:
   include:
     - haxe: 3.4.7
