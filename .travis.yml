@@ -4,7 +4,7 @@ language: haxe
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y libpng-dev libjpeg-turbo8-dev libturbojpeg libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev
+  - sudo apt-get install -y libpng-dev libjpeg-turbo8-dev libturbojpeg libvorbis-dev libopenal-dev libsdl2-dev libmbedtls-dev libuv1-dev mono-complete
   - sudo ln -s /usr/lib/x86_64-linux-gnu/libturbojpeg.so.0 /usr/lib/x86_64-linux-gnu/libturbojpeg.so
 
 matrix:
