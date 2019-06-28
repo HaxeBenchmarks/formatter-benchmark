@@ -1,6 +1,8 @@
 dist: xenial
 
-language: haxe
+language: 
+  - csharp
+  - haxe
 
 before_install:
   - sudo apt-get update
