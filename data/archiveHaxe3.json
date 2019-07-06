@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "date": "2019-07-06 21:13:42",
+    "haxeVersion": "3.4.7",
+    "targets": [
+      {
+        "outputLines": 365016,
+        "name": "C++",
+        "time": 15.3656780719757,
+        "inputLines": 363117
+      },
+      {
+        "outputLines": 365016,
+        "name": "NodeJS",
+        "time": 25.3719999790192,
+        "inputLines": 363117
+      },
+      {
+        "outputLines": 365016,
+        "name": "Java",
+        "time": 22.5209999084473,
+        "inputLines": 363117
+      },
+      {
+        "outputLines": 365016,
+        "name": "JVM",
+        "time": 22.2960000038147,
+        "inputLines": 363117
+      },
+      {
+        "outputLines": 365016,
+        "name": "PHP",
+        "time": 258.50072097778,
+        "inputLines": 363117
+      },
+      {
+        "outputLines": 365016,
+        "name": "Neko",
+        "time": 185.7327439785,
+        "inputLines": 363117
+      },
+      {
+        "outputLines": 365016,
+        "name": "Python",
+        "time": 221.145940681,
+        "inputLines": 363117
+      }
+    ]
+  }
+]
