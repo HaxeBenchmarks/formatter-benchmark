@@ -14,3 +14,8 @@ typedef TargetResult = {
 	var outputLines:Int;
 	var time:Float;
 }
+
+enum Dataset {
+	Haxe3;
+	Haxe4;
+}

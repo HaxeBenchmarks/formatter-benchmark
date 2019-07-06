@@ -155,27 +155,75 @@ class BenchmarkJS {
 	}
 
 	function showHistory(target:Target, canvasId:String) {
+		var haxe3Dataset = {
+			label: target + " (Haxe 3)",
+			backgroundColor: "#FF6666",
+			borderColor: "#FF0000",
+			borderWidth: 1,
+			fill: false,
+			spanGaps: true,
+			data: []
+		};
+
 		var haxe4Dataset = {
-			label: target,
+			label: target + " (Haxe 4)",
 			backgroundColor: "#6666FF",
 			borderColor: "#0000FF",
 			borderWidth: 1,
 			fill: false,
+			spanGaps: true,
 			data: []
 		};
 		var data = {
 			labels: [],
-			datasets: [haxe4Dataset]
+			datasets: [haxe3Dataset, haxe4Dataset]
 		};
 
+		var datasetData:Array<HistoricalDataPoint> = [];
+		for (run in haxe3Data) {
+			var time:Null<Float> = getHistoryTime(run, target);
+			if (time == null) {
+				continue;
+			}
+			datasetData.push({
+				time: time,
+				date: run.date,
+				dataset: Haxe3
+			});
+		}
 		for (run in haxe4Data) {
 			var time:Null<Float> = getHistoryTime(run, target);
 			if (time == null) {
 				continue;
 			}
-			data.labels.push(run.date);
-			haxe4Dataset.data.push(Math.round(time * 1000) / 1000);
+			datasetData.push({
+				time: time,
+				date: run.date,
+				dataset: Haxe4
+			});
 		}
+		datasetData.sort(sortDate);
+		for (item in datasetData) {
+			data.labels.push(item.date);
+			switch (item.dataset) {
+				case Haxe3:
+					haxe3Dataset.data.push(item.time);
+					haxe4Dataset.data.push(null);
+
+				case Haxe4:
+					haxe3Dataset.data.push(null);
+					haxe4Dataset.data.push(item.time);
+			}
+		}
+
+		// for (run in haxe4Data) {
+		// 	var time:Null<Float> = getHistoryTime(run, target);
+		// 	if (time == null) {
+		// 		continue;
+		// 	}
+		// 	data.labels.push(run.date);
+		// 	haxe4Dataset.data.push(Math.round(time * 1000) / 1000);
+		// }
 
 		var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById(canvasId), CanvasElement).getContext("2d");
 
@@ -206,6 +254,16 @@ class BenchmarkJS {
 		Syntax.code("new Chart ({0}, {1})", ctx, options);
 	}
 
+	function sortDate(a:HistoricalDataPoint, b:HistoricalDataPoint):Int {
+		if (a.date > b.date) {
+			return 1;
+		}
+		if (a.date < b.date) {
+			return -1;
+		}
+		return 0;
+	}
+
 	function getHistoryTime(testRun:TestRun, target:Target):Null<Float> {
 		for (runTarget in testRun.targets) {
 			if (target == runTarget.name) {
@@ -227,4 +285,10 @@ abstract Target(String) to String {
 	var NodeJs = "NodeJS";
 	var Php = "PHP";
 	var Python = "Python";
+}
+
+typedef HistoricalDataPoint = {
+	var time:Float;
+	var date:String;
+	var dataset:Dataset;
 }
