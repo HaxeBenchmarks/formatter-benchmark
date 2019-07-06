@@ -1,0 +1,8 @@
+-cp srcPages
+
+-lib hx3compat
+-lib json2object
+
+-js js/benchmark.js
+
+-main BenchmarkJS
