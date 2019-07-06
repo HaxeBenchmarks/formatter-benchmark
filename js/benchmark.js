@@ -119,8 +119,8 @@ BenchmarkJS.prototype = {
 		new Chart (ctx, options);
 	}
 	,showHistory: function(target,canvasId) {
-		var haxe3Dataset = { label : target, backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, fill : false, data : []};
-		var haxe4Dataset = { label : target, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, data : []};
+		var haxe3Dataset = { label : target + " (Haxe 3)", backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, fill : false, spanGaps : true, data : []};
+		var haxe4Dataset = { label : target + " (Haxe 4)", backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var data1 = { labels : [], datasets : [haxe3Dataset,haxe4Dataset]};
 		var datasetData = [];
 		var _g = 0;
