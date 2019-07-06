@@ -31,8 +31,8 @@ BenchmarkJS.prototype = {
 			_gthis.haxe3Data = parser.fromJson(data,"archiveHaxe3.json");
 			_gthis.checkLoaded();
 		};
-		request.onData = function(msg) {
-			console.log("srcPages/BenchmarkJS.hx:40:","failed to download Haxe 3 data: " + msg);
+		request.onError = function(msg) {
+			console.log("srcPages/BenchmarkJS.hx:39:","failed to download Haxe 3 data: " + msg);
 		};
 		request.request();
 		var request1 = new haxe_http_HttpJs("data/archiveHaxe4.json");
@@ -41,8 +41,8 @@ BenchmarkJS.prototype = {
 			_gthis.haxe4Data = parser1.fromJson(data1,"archiveHaxe4.json");
 			_gthis.checkLoaded();
 		};
-		request1.onData = function(msg1) {
-			console.log("srcPages/BenchmarkJS.hx:52:","failed to download Haxe 4 data: " + msg1);
+		request1.onError = function(msg1) {
+			console.log("srcPages/BenchmarkJS.hx:51:","failed to download Haxe 4 data: " + msg1);
 		};
 		request1.request();
 	}
@@ -59,8 +59,97 @@ BenchmarkJS.prototype = {
 		this.showData();
 	}
 	,showData: function() {
-		console.log("srcPages/BenchmarkJS.hx:71:","showData");
+		this.showLatest();
+		this.showHistory("C++","cppBenchmarks");
+		this.showHistory("Java","javaBenchmarks");
+		this.showHistory("JVM","jvmBenchmarks");
+		this.showHistory("Hashlink","hlBenchmarks");
+		this.showHistory("NodeJS","nodeBenchmarks");
+		this.showHistory("Neko","nekoBenchmarks");
+		this.showHistory("PHP","phpBenchmarks");
+		this.showHistory("Python","pythonBenchmarks");
 	}
+	,showLatest: function() {
+		var latestHaxe3Data = this.haxe3Data[this.haxe3Data.length - 1];
+		var latestHaxe4Data = this.haxe4Data[this.haxe4Data.length - 1];
+		var labels = ["C++","C#","Hashlink","Java","JVM","Neko","NodeJS","PHP","Python"];
+		var latestHaxe3Data1 = latestHaxe3Data.haxeVersion;
+		var _g = [];
+		var _g1 = 0;
+		while(_g1 < labels.length) {
+			var label = labels[_g1];
+			++_g1;
+			_g.push(null);
+		}
+		var haxe3Dataset = { label : latestHaxe3Data1, backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, data : _g};
+		var latestHaxe4Data1 = latestHaxe4Data.haxeVersion;
+		var _g2 = [];
+		var _g3 = 0;
+		while(_g3 < labels.length) {
+			var label1 = labels[_g3];
+			++_g3;
+			_g2.push(null);
+		}
+		var haxe4Dataset = { label : latestHaxe4Data1, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, data : _g2};
+		var data = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset]};
+		var _g4 = 0;
+		var _g5 = latestHaxe3Data.targets;
+		while(_g4 < _g5.length) {
+			var target = _g5[_g4];
+			++_g4;
+			var index = data.labels.indexOf(target.name);
+			if(index < 0) {
+				continue;
+			}
+			haxe3Dataset.data[index] = Math.round(target.time * 1000) / 1000;
+		}
+		var _g6 = 0;
+		var _g7 = latestHaxe4Data.targets;
+		while(_g6 < _g7.length) {
+			var target1 = _g7[_g6];
+			++_g6;
+			var index1 = data.labels.indexOf(target1.name);
+			if(index1 < 0) {
+				continue;
+			}
+			haxe4Dataset.data[index1] = Math.round(target1.time * 1000) / 1000;
+		}
+		var ctx = (js_Boot.__cast(window.document.getElementById("latestBenchmarks") , HTMLCanvasElement)).getContext("2d");
+		var options = { type : "bar", data : data, options : { responsive : true, legend : { position : "top"}, title : { display : true, text : "latest benchmark results"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
+		new Chart (ctx, options);
+	}
+	,showHistory: function(target,canvasId) {
+		var haxe4Dataset = { label : target, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, data : []};
+		var data = { labels : [], datasets : [haxe4Dataset]};
+		var _g = 0;
+		var _g1 = this.haxe4Data;
+		while(_g < _g1.length) {
+			var run = _g1[_g];
+			++_g;
+			var time = this.getHistoryTime(run,target);
+			if(time == null) {
+				continue;
+			}
+			data.labels.push(run.date);
+			haxe4Dataset.data.push(Math.round(time * 1000) / 1000);
+		}
+		var ctx = (js_Boot.__cast(window.document.getElementById(canvasId) , HTMLCanvasElement)).getContext("2d");
+		var options = { type : "line", data : data, options : { responsive : true, legend : { position : "top"}, title : { display : true, text : "" + target + " benchmark results"}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
+		new Chart (ctx, options);
+	}
+	,getHistoryTime: function(testRun,target) {
+		var _g = 0;
+		var _g1 = testRun.targets;
+		while(_g < _g1.length) {
+			var runTarget = _g1[_g];
+			++_g;
+			if(target == runTarget.name) {
+				return runTarget.time;
+			}
+		}
+		return null;
+	}
+	,__class__: BenchmarkJS
 };
 var EReg = function(r,opt) {
 	this.r = new RegExp(r,opt.split("u").join(""));
@@ -75,6 +164,7 @@ EReg.prototype = {
 		this.r.s = s;
 		return this.r.m != null;
 	}
+	,__class__: EReg
 };
 var HxOverrides = function() { };
 HxOverrides.__name__ = true;
@@ -309,6 +399,7 @@ json2object_reader_BaseParser.prototype = {
 			map.h[key] = value;
 		}
 	}
+	,__class__: json2object_reader_BaseParser
 };
 var JsonParser_$1 = function(errors,putils,errorType) {
 	if(errorType == null) {
@@ -332,6 +423,7 @@ JsonParser_$1.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	,getAuto: function() {
 		return new JsonParser_$1([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)));
 	}
+	,__class__: JsonParser_$1
 });
 var JsonParser_$3 = function(errors,putils,errorType) {
 	if(errorType == null) {
@@ -376,6 +468,7 @@ JsonParser_$3.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	,getAuto: function() {
 		return { date : new JsonParser_$4([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1))), haxeVersion : new JsonParser_$4([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1))), targets : new JsonParser_$5([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)))};
 	}
+	,__class__: JsonParser_$3
 });
 var JsonParser_$4 = function(errors,putils,errorType) {
 	if(errorType == null) {
@@ -399,6 +492,7 @@ JsonParser_$4.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	,getAuto: function() {
 		return new JsonParser_$4([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)));
 	}
+	,__class__: JsonParser_$4
 });
 var JsonParser_$5 = function(errors,putils,errorType) {
 	if(errorType == null) {
@@ -422,6 +516,7 @@ JsonParser_$5.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	,getAuto: function() {
 		return new JsonParser_$5([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)));
 	}
+	,__class__: JsonParser_$5
 });
 var JsonParser_$7 = function(errors,putils,errorType) {
 	if(errorType == null) {
@@ -469,6 +564,7 @@ JsonParser_$7.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	,getAuto: function() {
 		return { inputLines : new JsonParser_$8([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1))), name : new JsonParser_$4([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1))), outputLines : new JsonParser_$8([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1))), time : new JsonParser_$9([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)))};
 	}
+	,__class__: JsonParser_$7
 });
 var JsonParser_$8 = function(errors,putils,errorType) {
 	if(errorType == null) {
@@ -490,6 +586,7 @@ JsonParser_$8.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	,getAuto: function() {
 		return new JsonParser_$8([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)));
 	}
+	,__class__: JsonParser_$8
 });
 var JsonParser_$9 = function(errors,putils,errorType) {
 	if(errorType == null) {
@@ -511,6 +608,7 @@ JsonParser_$9.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	,getAuto: function() {
 		return new JsonParser_$9([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)));
 	}
+	,__class__: JsonParser_$9
 });
 var Lambda = function() { };
 Lambda.__name__ = true;
@@ -684,6 +782,9 @@ Lambda.concat = function(a,b) {
 Math.__name__ = true;
 var Std = function() { };
 Std.__name__ = true;
+Std.string = function(s) {
+	return js_Boot.__string_rec(s,"");
+};
 Std.parseInt = function(x) {
 	var v = parseInt(x, x && x[0]=="0" && (x[1]=="x" || x[1]=="X") ? 16 : 10);
 	if(isNaN(v)) {
@@ -695,6 +796,9 @@ var StringBuf = function() {
 	this.b = "";
 };
 StringBuf.__name__ = true;
+StringBuf.prototype = {
+	__class__: StringBuf
+};
 var StringTools = function() { };
 StringTools.__name__ = true;
 StringTools.startsWith = function(s,start) {
@@ -735,185 +839,8 @@ StringTools.rtrim = function(s) {
 StringTools.trim = function(s) {
 	return StringTools.ltrim(StringTools.rtrim(s));
 };
-StringTools.replace = function(s,sub,by) {
-	return s.split(sub).join(by);
-};
-var data_CSVReader = function(csvData,trimFields) {
-	if(trimFields == null) {
-		trimFields = true;
-	}
-	this.pos = 0;
-	this.delimiter = -1;
-	this.lineBreakConsumed = true;
-	this.trimFields = trimFields;
-	if(csvData == null) {
-		return;
-	}
-	this.csvDataLen = csvData.length;
-	if(trimFields) {
-		this.csvData = StringTools.trim(csvData);
-	} else {
-		this.csvData = csvData;
-	}
-	if(this.csvData == "") {
-		this.csvData = null;
-	}
-	this.detectDelimiter();
-};
-data_CSVReader.__name__ = true;
-data_CSVReader.prototype = {
-	setDelimiterChar: function(delim) {
-		this.delimiter = delim.charCodeAt(0);
-	}
-	,detectDelimiter: function() {
-		this.delimiter = -1;
-		if(this.csvData == null) {
-			return;
-		}
-		var index = this.csvData.indexOf("\n");
-		var firstLine;
-		if(index > 0) {
-			firstLine = this.csvData.substring(0,index);
-		} else {
-			firstLine = this.csvData;
-		}
-		var token = firstLine.split(";");
-		var countSemikolon = token.length;
-		token = firstLine.split(",");
-		var countKomma = token.length;
-		token = firstLine.split("\t");
-		var countTab = token.length;
-		if(countTab > countKomma) {
-			if(countTab > countSemikolon) {
-				this.delimiter = data_CSVReader.tab;
-			} else {
-				this.delimiter = data_CSVReader.semikolon;
-			}
-		} else if(countKomma > countSemikolon) {
-			this.delimiter = data_CSVReader.comma;
-		} else {
-			this.delimiter = data_CSVReader.semikolon;
-		}
-	}
-	,nextLine: function() {
-		var field;
-		var fields = [];
-		if(this.csvData == null) {
-			return fields;
-		}
-		while(true) {
-			field = this.readField();
-			if(!(field != null)) {
-				break;
-			}
-			if(this.trimFields) {
-				field = StringTools.trim(field);
-			}
-			fields.push(field);
-		}
-		return fields;
-	}
-	,readField: function() {
-		if(this.pos > this.csvDataLen) {
-			return null;
-		}
-		var c = this.csvData.charCodeAt(this.pos);
-		if(c == data_CSVReader.quote) {
-			return this.parseQotedField();
-		} else {
-			return this.parseUnqotedField();
-		}
-	}
-	,parseQotedField: function() {
-		var c;
-		this.pos++;
-		var start = this.pos;
-		var end = this.pos;
-		var escaped = false;
-		while(this.pos <= this.csvDataLen) {
-			c = this.csvData.charCodeAt(this.pos);
-			if(c == data_CSVReader.escape) {
-				escaped = true;
-			}
-			if(c != data_CSVReader.quote) {
-				this.pos++;
-				end = this.pos;
-				continue;
-			}
-			if(escaped) {
-				escaped = false;
-				this.pos++;
-				end = this.pos;
-				continue;
-			} else if(this.pos + 1 < this.csvDataLen) {
-				c = this.csvData.charCodeAt(this.pos + 1);
-				if(c == data_CSVReader.quote) {
-					escaped = true;
-					this.pos++;
-					end = this.pos;
-					continue;
-				}
-			}
-			break;
-		}
-		this.pos++;
-		while(this.pos <= this.csvDataLen) {
-			c = this.csvData.charCodeAt(this.pos);
-			if(c == this.delimiter) {
-				this.pos++;
-				break;
-			}
-			if(c == data_CSVReader.endR || c == data_CSVReader.endN) {
-				this.lineBreakConsumed = false;
-				break;
-			}
-			this.pos++;
-		}
-		var field = this.csvData.substring(start,end);
-		field = StringTools.replace(field,"\"\"","\"");
-		field = StringTools.replace(field,"\\\"","\"");
-		return field;
-	}
-	,parseUnqotedField: function() {
-		var c;
-		var start = this.pos;
-		while(this.pos <= this.csvDataLen) {
-			c = this.csvData.charCodeAt(this.pos);
-			if(c == this.delimiter) {
-				return this.csvData.substring(start,this.pos++);
-			}
-			if(c == data_CSVReader.endR || c == data_CSVReader.endN) {
-				if(!this.lineBreakConsumed) {
-					if(start != this.pos) {
-						return this.csvData.substring(start,this.pos);
-					}
-					while(this.pos <= this.csvDataLen) {
-						c = this.csvData.charCodeAt(this.pos);
-						if(c != data_CSVReader.endR && c != data_CSVReader.endN) {
-							break;
-						}
-						this.pos++;
-					}
-					this.lineBreakConsumed = true;
-					return null;
-				}
-				this.lineBreakConsumed = false;
-				return this.csvData.substring(start,this.pos);
-			}
-			this.pos++;
-		}
-		if(start == this.pos) {
-			return null;
-		}
-		return this.csvData.substring(start,this.pos);
-	}
-	,hasMore: function() {
-		if(this.csvData == null) {
-			return false;
-		}
-		return this.pos < this.csvDataLen;
-	}
-};
+var haxe_IMap = function() { };
+haxe_IMap.__name__ = true;
 var haxe_ds_List = function() {
 	this.length = 0;
 };
@@ -932,12 +859,16 @@ haxe_ds_List.prototype = {
 	,iterator: function() {
 		return new haxe_ds__$List_ListIterator(this.h);
 	}
+	,__class__: haxe_ds_List
 };
 var haxe_ds__$List_ListNode = function(item,next) {
 	this.item = item;
 	this.next = next;
 };
 haxe_ds__$List_ListNode.__name__ = true;
+haxe_ds__$List_ListNode.prototype = {
+	__class__: haxe_ds__$List_ListNode
+};
 var haxe_ds__$List_ListIterator = function(head) {
 	this.head = head;
 };
@@ -951,11 +882,13 @@ haxe_ds__$List_ListIterator.prototype = {
 		this.head = this.head.next;
 		return val;
 	}
+	,__class__: haxe_ds__$List_ListIterator
 };
 var haxe_ds_StringMap = function() {
 	this.h = { };
 };
 haxe_ds_StringMap.__name__ = true;
+haxe_ds_StringMap.__interfaces__ = [haxe_IMap];
 haxe_ds_StringMap.prototype = {
 	setReserved: function(key,value) {
 		if(this.rh == null) {
@@ -995,6 +928,7 @@ haxe_ds_StringMap.prototype = {
 		}
 		return out;
 	}
+	,__class__: haxe_ds_StringMap
 };
 var haxe_http_HttpBase = function(url) {
 	this.url = url;
@@ -1009,6 +943,7 @@ haxe_http_HttpBase.prototype = {
 	}
 	,onStatus: function(status) {
 	}
+	,__class__: haxe_http_HttpBase
 };
 var haxe_http_HttpJs = function(url) {
 	this.async = true;
@@ -1131,17 +1066,24 @@ haxe_http_HttpJs.prototype = $extend(haxe_http_HttpBase.prototype,{
 			onreadystatechange(null);
 		}
 	}
+	,__class__: haxe_http_HttpJs
 });
 var hxjsonast_Error = function(message,pos) {
 	this.message = message;
 	this.pos = pos;
 };
 hxjsonast_Error.__name__ = true;
+hxjsonast_Error.prototype = {
+	__class__: hxjsonast_Error
+};
 var hxjsonast_Json = function(value,pos) {
 	this.value = value;
 	this.pos = pos;
 };
 hxjsonast_Json.__name__ = true;
+hxjsonast_Json.prototype = {
+	__class__: hxjsonast_Json
+};
 var hxjsonast_JsonValue = $hxEnums["hxjsonast.JsonValue"] = { __ename__ : true, __constructs__ : ["JString","JNumber","JObject","JArray","JBool","JNull"]
 	,JString: ($_=function(s) { return {_hx_index:0,s:s,__enum__:"hxjsonast.JsonValue",toString:$estr}; },$_.__params__ = ["s"],$_)
 	,JNumber: ($_=function(s) { return {_hx_index:1,s:s,__enum__:"hxjsonast.JsonValue",toString:$estr}; },$_.__params__ = ["s"],$_)
@@ -1156,6 +1098,9 @@ var hxjsonast_JObjectField = function(name,namePos,value) {
 	this.value = value;
 };
 hxjsonast_JObjectField.__name__ = true;
+hxjsonast_JObjectField.prototype = {
+	__class__: hxjsonast_JObjectField
+};
 var hxjsonast_Parser = function(source,filename) {
 	this.source = source;
 	this.filename = filename;
@@ -1485,6 +1430,7 @@ hxjsonast_Parser.prototype = {
 	,invalidNumber: function(start) {
 		throw new js__$Boot_HaxeError(new hxjsonast_Error("Invalid number: " + this.source.substring(start,this.pos),new hxjsonast_Position(this.filename,start,this.pos)));
 	}
+	,__class__: hxjsonast_Parser
 };
 var hxjsonast_Position = function(file,min,max) {
 	this.file = file;
@@ -1492,6 +1438,9 @@ var hxjsonast_Position = function(file,min,max) {
 	this.max = max;
 };
 hxjsonast_Position.__name__ = true;
+hxjsonast_Position.prototype = {
+	__class__: hxjsonast_Position
+};
 var js__$Boot_HaxeError = function(val) {
 	Error.call(this);
 	this.val = val;
@@ -1502,9 +1451,25 @@ var js__$Boot_HaxeError = function(val) {
 js__$Boot_HaxeError.__name__ = true;
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
+	__class__: js__$Boot_HaxeError
 });
 var js_Boot = function() { };
 js_Boot.__name__ = true;
+js_Boot.getClass = function(o) {
+	if(((o) instanceof Array) && o.__enum__ == null) {
+		return Array;
+	} else {
+		var cl = o.__class__;
+		if(cl != null) {
+			return cl;
+		}
+		var name = js_Boot.__nativeClassName(o);
+		if(name != null) {
+			return js_Boot.__resolveNativeClass(name);
+		}
+		return null;
+	}
+};
 js_Boot.__string_rec = function(o,s) {
 	if(o == null) {
 		return "null";
@@ -1590,6 +1555,99 @@ js_Boot.__string_rec = function(o,s) {
 		return String(o);
 	}
 };
+js_Boot.__interfLoop = function(cc,cl) {
+	if(cc == null) {
+		return false;
+	}
+	if(cc == cl) {
+		return true;
+	}
+	if(Object.prototype.hasOwnProperty.call(cc,"__interfaces__")) {
+		var intf = cc.__interfaces__;
+		var _g = 0;
+		var _g1 = intf.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var i1 = intf[i];
+			if(i1 == cl || js_Boot.__interfLoop(i1,cl)) {
+				return true;
+			}
+		}
+	}
+	return js_Boot.__interfLoop(cc.__super__,cl);
+};
+js_Boot.__instanceof = function(o,cl) {
+	if(cl == null) {
+		return false;
+	}
+	switch(cl) {
+	case Array:
+		return ((o) instanceof Array);
+	case Bool:
+		return typeof(o) == "boolean";
+	case Dynamic:
+		return o != null;
+	case Float:
+		return typeof(o) == "number";
+	case Int:
+		if(typeof(o) == "number") {
+			return ((o | 0) === o);
+		} else {
+			return false;
+		}
+		break;
+	case String:
+		return typeof(o) == "string";
+	default:
+		if(o != null) {
+			if(typeof(cl) == "function") {
+				if(((o) instanceof cl)) {
+					return true;
+				}
+				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) {
+					return true;
+				}
+			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
+				if(((o) instanceof cl)) {
+					return true;
+				}
+			}
+		} else {
+			return false;
+		}
+		if(cl == Class ? o.__name__ != null : false) {
+			return true;
+		}
+		if(cl == Enum ? o.__ename__ != null : false) {
+			return true;
+		}
+		if(o.__enum__ != null) {
+			return $hxEnums[o.__enum__] == cl;
+		} else {
+			return false;
+		}
+	}
+};
+js_Boot.__cast = function(o,t) {
+	if(o == null || js_Boot.__instanceof(o,t)) {
+		return o;
+	} else {
+		throw new js__$Boot_HaxeError("Cannot cast " + Std.string(o) + " to " + Std.string(t));
+	}
+};
+js_Boot.__nativeClassName = function(o) {
+	var name = js_Boot.__toStr.call(o).slice(8,-1);
+	if(name == "Object" || name == "Function" || name == "Math" || name == "JSON") {
+		return null;
+	}
+	return name;
+};
+js_Boot.__isNativeObj = function(o) {
+	return js_Boot.__nativeClassName(o) != null;
+};
+js_Boot.__resolveNativeClass = function(name) {
+	return $global[name];
+};
 var js_Browser = function() { };
 js_Browser.__name__ = true;
 js_Browser.createXMLHttpRequest = function() {
@@ -1613,6 +1671,7 @@ js_jquery_JqEltsIterator.prototype = {
 	,next: function() {
 		return $(this.j[this.i++]);
 	}
+	,__class__: js_jquery_JqEltsIterator
 };
 var js_jquery_JqIterator = function(j) {
 	this.i = 0;
@@ -1626,6 +1685,7 @@ js_jquery_JqIterator.prototype = {
 	,next: function() {
 		return this.j[this.i++];
 	}
+	,__class__: js_jquery_JqIterator
 };
 var json2object_Error = $hxEnums["json2object.Error"] = { __ename__ : true, __constructs__ : ["IncorrectType","IncorrectEnumValue","InvalidEnumConstructor","UninitializedVariable","UnknownVariable","ParserError"]
 	,IncorrectType: ($_=function(variable,expected,pos) { return {_hx_index:0,variable:variable,expected:expected,pos:pos,__enum__:"json2object.Error",toString:$estr}; },$_.__params__ = ["variable","expected","pos"],$_)
@@ -1716,14 +1776,22 @@ json2object_PositionUtils.prototype = {
 	,revert: function(position) {
 		return new hxjsonast_Position(position.file,position.min - 1,position.max - 1);
 	}
+	,__class__: json2object_PositionUtils
 };
 function $iterator(o) { if( o instanceof Array ) return function() { return HxOverrides.iter(o); }; return typeof(o.iterator) == 'function' ? $bind(o,o.iterator) : o.iterator; }
 function $getIterator(o) { if( o instanceof Array ) return HxOverrides.iter(o); else return o.iterator(); }
 function $bind(o,m) { if( m == null ) return null; if( m.__id__ == null ) m.__id__ = $global.$haxeUID++; var f; if( o.hx__closures__ == null ) o.hx__closures__ = {}; else f = o.hx__closures__[m.__id__]; if( f == null ) { f = m.bind(o); o.hx__closures__[m.__id__] = f; } return f; }
 if(typeof $global.$haxeUID == "undefined") $global.$haxeUID = 0;
 if( String.fromCodePoint == null ) String.fromCodePoint = function(c) { return c < 0x10000 ? String.fromCharCode(c) : String.fromCharCode((c>>10)+0xD7C0)+String.fromCharCode((c&0x3FF)+0xDC00); }
+String.prototype.__class__ = String;
 String.__name__ = true;
 Array.__name__ = true;
+var Int = { };
+var Dynamic = { };
+var Float = Number;
+var Bool = Boolean;
+var Class = { };
+var Enum = { };
 var __map_reserved = {};
 Object.defineProperty(js__$Boot_HaxeError.prototype,"message",{ get : function() {
 	return String(this.val);
@@ -1741,12 +1809,5 @@ if(JQueryDefined && $.fn != null) {
 		return new js_jquery_JqIterator(this);
 	};
 }
-data_CSVReader.quote = "\"".charCodeAt(0);
-data_CSVReader.escape = "\\".charCodeAt(0);
-data_CSVReader.semikolon = ";".charCodeAt(0);
-data_CSVReader.comma = ",".charCodeAt(0);
-data_CSVReader.tab = "\t".charCodeAt(0);
-data_CSVReader.endR = "\r".charCodeAt(0);
-data_CSVReader.endN = "\n".charCodeAt(0);
 BenchmarkJS.main();
 })(typeof window != "undefined" ? window : typeof global != "undefined" ? global : typeof self != "undefined" ? self : this);
