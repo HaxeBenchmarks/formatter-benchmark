@@ -52,7 +52,7 @@ script:
   - git clone https://github.com/HaxeCheckstyle/haxe-formatter.git --depth 1
   - cp haxe-formatter/haxelib.json .
   - haxe buildAll.hxml
-  - mkdir data && mkdir -p pages/data
+  - mkdir data
   - (cd data && git clone https://github.com/HaxeFoundation/haxe.git --depth 1)
   - (cd data && git clone https://github.com/openfl/openfl.git --depth 1)
   - (cd data && git clone https://github.com/openfl/lime.git --depth 1)
