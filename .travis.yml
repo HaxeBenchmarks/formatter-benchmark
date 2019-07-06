@@ -49,8 +49,6 @@ before_script:
   - phpenv config-rm xdebug.ini
 
 script:
-  - openssl aes-256-cbc -K $encrypted_a7ab24aea1c5_key -iv $encrypted_a7ab24aea1c5_iv -in deploy_rsa.enc -out deploy_rsa -d
-  - (git clone https://github.com/AlexHaxe/haxe-formatter-benchmark.git -b gh-pages pages && cd pages && git config user.name "Travis CI" && git config user.email "Alexander.Blum@gmail.com")
   - git clone https://github.com/HaxeCheckstyle/haxe-formatter.git --depth 1
   - cp haxe-formatter/haxelib.json .
   - haxe buildAll.hxml
@@ -60,6 +58,8 @@ script:
   - (cd data && git clone https://github.com/openfl/lime.git --depth 1)
   - chmod 755 benchmark.sh
   - ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src | tee results.csv
+  - (git clone https://github.com/AlexHaxe/haxe-formatter-benchmark.git -b gh-pages pages && cd pages && git config user.name "Travis CI" && git config user.email "Alexander.Blum@gmail.com")
   - haxe buildPagesData.hxml
   - (cd pages && git add -A . && git commit  -m "Deploy new results to GitHub Pages")
+  - openssl aes-256-cbc -K $encrypted_a7ab24aea1c5_key -iv $encrypted_a7ab24aea1c5_iv -in deploy_rsa.enc -out deploy_rsa -d
   - (cd pages && chmod 600 ../deploy_rsa && eval "$(ssh-agent -s)" && ssh-add ../deploy_rsa && git push git@github.com:AlexHaxe/haxe-formatter-benchmark.git gh-pages && rm ../deploy_rsa)
