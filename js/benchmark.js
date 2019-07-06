@@ -119,10 +119,12 @@ BenchmarkJS.prototype = {
 		new Chart (ctx, options);
 	}
 	,showHistory: function(target,canvasId) {
+		var haxe3Dataset = { label : target, backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, fill : false, data : []};
 		var haxe4Dataset = { label : target, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, data : []};
-		var data = { labels : [], datasets : [haxe4Dataset]};
+		var data1 = { labels : [], datasets : [haxe3Dataset,haxe4Dataset]};
+		var datasetData = [];
 		var _g = 0;
-		var _g1 = this.haxe4Data;
+		var _g1 = this.haxe3Data;
 		while(_g < _g1.length) {
 			var run = _g1[_g];
 			++_g;
@@ -130,12 +132,48 @@ BenchmarkJS.prototype = {
 			if(time == null) {
 				continue;
 			}
-			data.labels.push(run.date);
-			haxe4Dataset.data.push(Math.round(time * 1000) / 1000);
+			datasetData.push({ time : time, date : run.date, dataset : data_Dataset.Haxe3});
+		}
+		var _g2 = 0;
+		var _g3 = this.haxe4Data;
+		while(_g2 < _g3.length) {
+			var run1 = _g3[_g2];
+			++_g2;
+			var time1 = this.getHistoryTime(run1,target);
+			if(time1 == null) {
+				continue;
+			}
+			datasetData.push({ time : time1, date : run1.date, dataset : data_Dataset.Haxe4});
+		}
+		datasetData.sort($bind(this,this.sortDate));
+		var _g4 = 0;
+		while(_g4 < datasetData.length) {
+			var item = datasetData[_g4];
+			++_g4;
+			data1.labels.push(item.date);
+			switch(item.dataset._hx_index) {
+			case 0:
+				haxe3Dataset.data.push(item.time);
+				haxe4Dataset.data.push(null);
+				break;
+			case 1:
+				haxe3Dataset.data.push(null);
+				haxe4Dataset.data.push(item.time);
+				break;
+			}
 		}
 		var ctx = (js_Boot.__cast(window.document.getElementById(canvasId) , HTMLCanvasElement)).getContext("2d");
-		var options = { type : "line", data : data, options : { responsive : true, legend : { position : "top"}, title : { display : true, text : "" + target + " benchmark results"}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
+		var options = { type : "line", data : data1, options : { responsive : true, legend : { position : "top"}, title : { display : true, text : "" + target + " benchmark results"}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
 		new Chart (ctx, options);
+	}
+	,sortDate: function(a,b) {
+		if(a.date > b.date) {
+			return 1;
+		}
+		if(a.date < b.date) {
+			return -1;
+		}
+		return 0;
 	}
 	,getHistoryTime: function(testRun,target) {
 		var _g = 0;
@@ -838,6 +876,10 @@ StringTools.rtrim = function(s) {
 };
 StringTools.trim = function(s) {
 	return StringTools.ltrim(StringTools.rtrim(s));
+};
+var data_Dataset = $hxEnums["data.Dataset"] = { __ename__ : true, __constructs__ : ["Haxe3","Haxe4"]
+	,Haxe3: {_hx_index:0,__enum__:"data.Dataset",toString:$estr}
+	,Haxe4: {_hx_index:1,__enum__:"data.Dataset",toString:$estr}
 };
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
