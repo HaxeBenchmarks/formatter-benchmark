@@ -52,9 +52,10 @@ script:
   - git clone https://github.com/HaxeCheckstyle/haxe-formatter.git --depth 1
   - cp haxe-formatter/haxelib.json .
   - haxe buildAll.hxml
-  - mkdir data
+  - mkdir data && mkdir -p pages/data
   - (cd data && git clone https://github.com/HaxeFoundation/haxe.git --depth 1)
   - (cd data && git clone https://github.com/openfl/openfl.git --depth 1)
   - (cd data && git clone https://github.com/openfl/lime.git --depth 1)
   - chmod 755 benchmark.sh
-  - ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src
+  - ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src | tee results.csv
+  - haxe buildPagesData.hxml
