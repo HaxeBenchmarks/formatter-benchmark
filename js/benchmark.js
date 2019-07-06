@@ -132,7 +132,7 @@ BenchmarkJS.prototype = {
 			if(time == null) {
 				continue;
 			}
-			datasetData.push({ time : time, date : run.date, dataset : data_Dataset.Haxe3});
+			datasetData.push({ time : Math.round(time * 1000) / 1000, date : run.date, dataset : data_Dataset.Haxe3});
 		}
 		var _g2 = 0;
 		var _g3 = this.haxe4Data;
@@ -143,7 +143,7 @@ BenchmarkJS.prototype = {
 			if(time1 == null) {
 				continue;
 			}
-			datasetData.push({ time : time1, date : run1.date, dataset : data_Dataset.Haxe4});
+			datasetData.push({ time : Math.round(time1 * 1000) / 1000, date : run1.date, dataset : data_Dataset.Haxe4});
 		}
 		datasetData.sort($bind(this,this.sortDate));
 		var _g4 = 0;
