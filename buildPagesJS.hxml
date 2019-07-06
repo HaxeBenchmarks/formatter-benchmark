@@ -3,6 +3,6 @@
 -lib hx3compat
 -lib json2object
 
--js js/benchmark.js
+-js js/benchmark.new.js
 
 -main BenchmarkJS

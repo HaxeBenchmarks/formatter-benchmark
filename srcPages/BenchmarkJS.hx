@@ -65,5 +65,7 @@ class BenchmarkJS {
 
 	function showData() {
 		trace("showData");
+		trace(haxe3Data);
+		trace(haxe4Data);
 	}
 }
