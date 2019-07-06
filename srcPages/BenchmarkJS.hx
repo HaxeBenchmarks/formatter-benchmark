@@ -186,7 +186,7 @@ class BenchmarkJS {
 				continue;
 			}
 			datasetData.push({
-				time: time,
+				time: Math.round(time * 1000) / 1000,
 				date: run.date,
 				dataset: Haxe3
 			});
@@ -197,7 +197,7 @@ class BenchmarkJS {
 				continue;
 			}
 			datasetData.push({
-				time: time,
+				time: Math.round(time * 1000) / 1000,
 				date: run.date,
 				dataset: Haxe4
 			});
@@ -216,17 +216,7 @@ class BenchmarkJS {
 			}
 		}
 
-		// for (run in haxe4Data) {
-		// 	var time:Null<Float> = getHistoryTime(run, target);
-		// 	if (time == null) {
-		// 		continue;
-		// 	}
-		// 	data.labels.push(run.date);
-		// 	haxe4Dataset.data.push(Math.round(time * 1000) / 1000);
-		// }
-
 		var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById(canvasId), CanvasElement).getContext("2d");
-
 		var options = {
 			type: "line",
 			data: data,
