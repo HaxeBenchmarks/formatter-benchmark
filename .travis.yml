@@ -21,8 +21,8 @@ matrix:
       - haxelib git hxargs https://github.com/Simn/hxargs --never
       - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
       - haxelib git json2object https://github.com/elnabo/json2object
+      - haxelib git tokentree https://github.com/HaxeCheckstyle/haxe-formatter.git
       - haxelib install haxeparser
-      - haxelib install tokentree
       - haxelib install formatter
       - haxelib install hxcpp
       - haxelib install hxjava
@@ -40,7 +40,7 @@ matrix:
       - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
       - haxelib git json2object https://github.com/elnabo/json2object
       - haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp
-      - haxelib install tokentree
+      - haxelib git tokentree https://github.com/HaxeCheckstyle/haxe-formatter.git
       - haxelib install formatter
       - haxelib install hxjava
       - haxelib install hxcs

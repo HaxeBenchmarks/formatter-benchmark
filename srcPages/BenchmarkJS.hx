@@ -72,6 +72,7 @@ class BenchmarkJS {
 		showHistory(Java, "javaBenchmarks");
 		showHistory(Jvm, "jvmBenchmarks");
 		showHistory(Hashlink, "hlBenchmarks");
+		showHistory(Csharp, "csharpBenchmarks");
 		showHistory(NodeJs, "nodeBenchmarks");
 		showHistory(Neko, "nekoBenchmarks");
 		showHistory(Php, "phpBenchmarks");
@@ -81,7 +82,7 @@ class BenchmarkJS {
 	function showLatest() {
 		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
-		var labels:Array<String> = [Cpp, Cs, Hashlink, Java, Jvm, Neko, NodeJs, Php, Python];
+		var labels:Array<String> = [Cpp, Csharp, Hashlink, Java, Jvm, Neko, NodeJs, Php, Python];
 
 		var haxe3Dataset = {
 			label: latestHaxe3Data.haxeVersion,
@@ -267,7 +268,7 @@ class BenchmarkJS {
 @:enum
 abstract Target(String) to String {
 	var Cpp = "C++";
-	var Cs = "C#";
+	var Csharp = "C#";
 	var Hashlink = "Hashlink";
 	var Java = "Java";
 	var Jvm = "JVM";

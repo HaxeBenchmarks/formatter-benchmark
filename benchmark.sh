@@ -18,12 +18,12 @@ java -jar out/jvm/Cli.jar $DATA
 resetGit
 /usr/local/bin/hl out/formatter.hl $DATA
 resetGit
+mono out/cs/bin/Cli.exe $DATA
+resetGit
 php out/php/index.php $DATA
 resetGit
 neko out/formatter.n $DATA
 resetGit
 python3 out/formatter.py $DATA
-# resetGit
-# mono out/cs/bin/Cli.exe $DATA
 # resetGit
 # lua out/formatter.lua $DATA
