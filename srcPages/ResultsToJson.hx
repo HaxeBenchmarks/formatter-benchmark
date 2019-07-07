@@ -10,8 +10,7 @@ import data.TestRun;
 
 class ResultsToJson {
 	public static function main() {
-		var testRun:TestRun = parseResults();
-		archiveRun(testRun);
+		archiveRun(parseResults());
 	}
 
 	static function archiveRun(testRun:TestRun) {
@@ -19,6 +18,10 @@ class ResultsToJson {
 		#if haxe4
 		fileName = "pages/data/archiveHaxe4.json";
 		#end
+		if (testRun.targets.length <= 0) {
+			Sys.println("no target data found");
+			return;
+		}
 
 		var archiveContent:String = "";
 		var archivedData:ArchivedResults = [];
