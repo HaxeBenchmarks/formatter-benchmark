@@ -64,6 +64,7 @@ BenchmarkJS.prototype = {
 		this.showHistory("Java","javaBenchmarks");
 		this.showHistory("JVM","jvmBenchmarks");
 		this.showHistory("Hashlink","hlBenchmarks");
+		this.showHistory("C#","csharpBenchmarks");
 		this.showHistory("NodeJS","nodeBenchmarks");
 		this.showHistory("Neko","nekoBenchmarks");
 		this.showHistory("PHP","phpBenchmarks");
