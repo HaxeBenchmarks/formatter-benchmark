@@ -39,7 +39,7 @@ matrix:
       - haxelib git hxargs https://github.com/Simn/hxargs --never
       - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
       - haxelib git json2object https://github.com/elnabo/json2object
-      - haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp
+      - (haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp && cd /home/travis/haxe/lib/hxcpp/git/tools/hxcpp && haxe compile.hxml)
       - haxelib git tokentree https://github.com/HaxeCheckstyle/tokentree.git
       - haxelib install formatter
       - haxelib install hxjava
