@@ -109,6 +109,9 @@ class BenchmarkJS {
 			if (index < 0) {
 				continue;
 			}
+			if (target.name == Jvm) {
+				continue;
+			}
 			haxe3Dataset.data[index] = Math.round(target.time * 1000) / 1000;
 		}
 		for (target in latestHaxe4Data.targets) {
@@ -179,6 +182,9 @@ class BenchmarkJS {
 			labels: [],
 			datasets: [haxe3Dataset, haxe4Dataset]
 		};
+		if (target == Jvm) {
+			data.datasets = [haxe4Dataset];
+		}
 
 		var datasetData:Array<HistoricalDataPoint> = [];
 		for (run in haxe3Data) {
