@@ -102,6 +102,9 @@ BenchmarkJS.prototype = {
 			if(index < 0) {
 				continue;
 			}
+			if(target.name == "JVM") {
+				continue;
+			}
 			haxe3Dataset.data[index] = Math.round(target.time * 1000) / 1000;
 		}
 		var _g6 = 0;
@@ -123,6 +126,9 @@ BenchmarkJS.prototype = {
 		var haxe3Dataset = { label : target + " (Haxe 3)", backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var haxe4Dataset = { label : target + " (Haxe 4)", backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var data1 = { labels : [], datasets : [haxe3Dataset,haxe4Dataset]};
+		if(target == "JVM") {
+			data1.datasets = [haxe4Dataset];
+		}
 		var datasetData = [];
 		var _g = 0;
 		var _g1 = this.haxe3Data;
