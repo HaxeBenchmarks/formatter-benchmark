@@ -21,7 +21,7 @@ matrix:
       - haxelib git hxargs https://github.com/Simn/hxargs --never
       - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
       - haxelib git json2object https://github.com/elnabo/json2object
-      - haxelib git tokentree https://github.com/HaxeCheckstyle/haxe-formatter.git
+      - haxelib git tokentree https://github.com/HaxeCheckstyle/tokentree.git
       - haxelib install haxeparser
       - haxelib install formatter
       - haxelib install hxcpp
