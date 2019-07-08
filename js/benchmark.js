@@ -125,9 +125,13 @@ BenchmarkJS.prototype = {
 	,showHistory: function(target,canvasId) {
 		var haxe3Dataset = { label : target + " (Haxe 3)", backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var haxe4Dataset = { label : target + " (Haxe 4)", backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, spanGaps : true, data : []};
+		var haxe4ES6Dataset = { label : target + " (Haxe 4 (ES6))", backgroundColor : "#66FF66", borderColor : "#00FF00", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var data1 = { labels : [], datasets : [haxe3Dataset,haxe4Dataset]};
 		if(target == "JVM") {
 			data1.datasets = [haxe4Dataset];
+		}
+		if(target == "NodeJS") {
+			data1.datasets.push(haxe4ES6Dataset);
 		}
 		var datasetData = [];
 		var _g = 0;
@@ -150,7 +154,11 @@ BenchmarkJS.prototype = {
 			if(time1 == null) {
 				continue;
 			}
-			datasetData.push({ time : Math.round(time1 * 1000) / 1000, date : run1.date, dataset : data_Dataset.Haxe4});
+			var time2 = null;
+			if(target == "NodeJS") {
+				time2 = this.getHistoryTime(run1,"NodeJS (ES6)");
+			}
+			datasetData.push({ time : Math.round(time1 * 1000) / 1000, time2 : time2, date : run1.date, dataset : data_Dataset.Haxe4});
 		}
 		datasetData.sort($bind(this,this.sortDate));
 		var _g4 = 0;
