@@ -92,10 +92,7 @@ BenchmarkJS.prototype = {
 			_g2.push(null);
 		}
 		var haxe4Dataset = { label : latestHaxe4Data1, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, data : _g2};
-		var haxe4ES6Dataset_label = latestHaxe4Data.haxeVersion + " (ES6)";
-		var haxe4ES6Dataset_backgroundColor = "#66FF66";
-		var haxe4ES6Dataset_borderColor = "#00FF00";
-		var haxe4ES6Dataset_borderWidth = 1;
+		var haxe4ES6Dataset = latestHaxe4Data.haxeVersion + " (ES6)";
 		var _g4 = [];
 		var _g5 = 0;
 		while(_g5 < labels.length) {
@@ -103,8 +100,8 @@ BenchmarkJS.prototype = {
 			++_g5;
 			_g4.push(null);
 		}
-		var haxe4ES6Dataset_data = _g4;
-		var data = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset]};
+		var haxe4ES6Dataset1 = { label : haxe4ES6Dataset, backgroundColor : "#66FF66", borderColor : "#00FF00", borderWidth : 1, data : _g4};
+		var data = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset1]};
 		var _g6 = 0;
 		var _g7 = latestHaxe3Data.targets;
 		while(_g6 < _g7.length) {
@@ -131,7 +128,7 @@ BenchmarkJS.prototype = {
 			haxe4Dataset.data[index1] = Math.round(target1.time * 1000) / 1000;
 			if(target1.name == "NodeJS") {
 				var time = this.getHistoryTime(latestHaxe4Data,"NodeJS (ES6)");
-				haxe4ES6Dataset_data[index1] = Math.round(time * 1000) / 1000;
+				haxe4ES6Dataset1.data[index1] = Math.round(time * 1000) / 1000;
 			}
 		}
 		var ctx = (js_Boot.__cast(window.document.getElementById("latestBenchmarks") , HTMLCanvasElement)).getContext("2d");
@@ -172,7 +169,10 @@ BenchmarkJS.prototype = {
 			}
 			var time2 = null;
 			if(target == "NodeJS") {
-				time2 = Math.round(this.getHistoryTime(run1,"NodeJS (ES6)") * 1000) / 1000;
+				time2 = this.getHistoryTime(run1,"NodeJS (ES6)");
+				if(time2 != null) {
+					time2 = Math.round(time2 * 1000) / 1000;
+				}
 			}
 			datasetData.push({ time : Math.round(time1 * 1000) / 1000, time2 : time2, date : run1.date, dataset : data_Dataset.Haxe4});
 		}
