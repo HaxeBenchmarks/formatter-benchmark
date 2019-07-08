@@ -178,12 +178,24 @@ class BenchmarkJS {
 			spanGaps: true,
 			data: []
 		};
+		var haxe4ES6Dataset = {
+			label: target + " (Haxe 4 (ES6))",
+			backgroundColor: "#66FF66",
+			borderColor: "#00FF00",
+			borderWidth: 1,
+			fill: false,
+			spanGaps: true,
+			data: []
+		};
 		var data = {
 			labels: [],
 			datasets: [haxe3Dataset, haxe4Dataset]
 		};
 		if (target == Jvm) {
 			data.datasets = [haxe4Dataset];
+		}
+		if (target == NodeJs) {
+			data.datasets.push(haxe4ES6Dataset);
 		}
 
 		var datasetData:Array<HistoricalDataPoint> = [];
@@ -203,8 +215,13 @@ class BenchmarkJS {
 			if (time == null) {
 				continue;
 			}
+			var time2:Null<Float> = null;
+			if (target == NodeJs) {
+				time2 = getHistoryTime(run, NodeJsEs6);
+			}
 			datasetData.push({
 				time: Math.round(time * 1000) / 1000,
+				time2: time2,
 				date: run.date,
 				dataset: Haxe4
 			});
@@ -216,10 +233,11 @@ class BenchmarkJS {
 				case Haxe3:
 					haxe3Dataset.data.push(item.time);
 					haxe4Dataset.data.push(null);
-
+					haxe4ES6Dataset.data.push(null);
 				case Haxe4:
 					haxe3Dataset.data.push(null);
 					haxe4Dataset.data.push(item.time);
+					haxe4ES6Dataset.data.push(item.time2);
 			}
 		}
 
@@ -280,12 +298,14 @@ abstract Target(String) to String {
 	var Jvm = "JVM";
 	var Neko = "Neko";
 	var NodeJs = "NodeJS";
+	var NodeJsEs6 = "NodeJS (ES6)";
 	var Php = "PHP";
 	var Python = "Python";
 }
 
 typedef HistoricalDataPoint = {
 	var time:Float;
+	var ?time2:Float;
 	var date:String;
 	var dataset:Dataset;
 }

@@ -50,6 +50,13 @@ buildCommon.hxml
 --next
 
 buildCommon.hxml
+-lib hxnodejs
+-D js-es=6
+-js out/formatter.es6.js
+
+--next
+
+buildCommon.hxml
 -neko out/formatter.n
 
 # --next

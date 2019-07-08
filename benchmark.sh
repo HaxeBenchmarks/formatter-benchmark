@@ -12,6 +12,8 @@ function resetGit {
 resetGit
 node out/formatter.js $DATA
 resetGit
+node out/formatter.es6.js $DATA
+resetGit
 java -jar out/java/Cli.jar $DATA
 resetGit
 java -jar out/jvm/Cli.jar $DATA

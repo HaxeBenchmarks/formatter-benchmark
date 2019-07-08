@@ -37,6 +37,9 @@ class BenchmarkStatMacro {
 		if (~/\.n$/.match(output)) {
 			return "Neko";
 		}
+		if (~/\.es6\.js$/.match(output)) {
+			return "NodeJS (ES6)";
+		}
 		if (~/\.js$/.match(output)) {
 			return "NodeJS";
 		}
