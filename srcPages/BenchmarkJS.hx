@@ -229,11 +229,11 @@ class BenchmarkJS {
 			}
 			var time2:Null<Float> = null;
 			if (target == NodeJs) {
-				time2 = getHistoryTime(run, NodeJsEs6);
+				time2 = Math.round(getHistoryTime(run, NodeJsEs6) * 1000) / 1000;
 			}
 			datasetData.push({
 				time: Math.round(time * 1000) / 1000,
-				time2: Math.round(time2 * 1000) / 1000,
+				time2: time2,
 				date: run.date,
 				dataset: Haxe4
 			});
