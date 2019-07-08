@@ -110,7 +110,7 @@ class BenchmarkJS {
 
 		var data = {
 			labels: labels,
-			datasets: [haxe3Dataset, haxe4Dataset]
+			datasets: [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset]
 		};
 		for (target in latestHaxe3Data.targets) {
 			var index:Int = data.labels.indexOf(target.name);
@@ -229,7 +229,10 @@ class BenchmarkJS {
 			}
 			var time2:Null<Float> = null;
 			if (target == NodeJs) {
-				time2 = Math.round(getHistoryTime(run, NodeJsEs6) * 1000) / 1000;
+				time2 = getHistoryTime(run, NodeJsEs6);
+				if (time2 != null) {
+					time2 = Math.round(time2 * 1000) / 1000;
+				}
 			}
 			datasetData.push({
 				time: Math.round(time * 1000) / 1000,
