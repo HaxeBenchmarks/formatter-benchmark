@@ -172,9 +172,9 @@ BenchmarkJS.prototype = {
 			}
 			var time2 = null;
 			if(target == "NodeJS") {
-				time2 = this.getHistoryTime(run1,"NodeJS (ES6)");
+				time2 = Math.round(this.getHistoryTime(run1,"NodeJS (ES6)") * 1000) / 1000;
 			}
-			datasetData.push({ time : Math.round(time1 * 1000) / 1000, time2 : Math.round(time2 * 1000) / 1000, date : run1.date, dataset : data_Dataset.Haxe4});
+			datasetData.push({ time : Math.round(time1 * 1000) / 1000, time2 : time2, date : run1.date, dataset : data_Dataset.Haxe4});
 		}
 		datasetData.sort($bind(this,this.sortDate));
 		var _g4 = 0;
