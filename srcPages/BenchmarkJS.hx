@@ -100,6 +100,14 @@ class BenchmarkJS {
 			data: [for (label in labels) null]
 		};
 
+		var haxe4ES6Dataset = {
+			label: latestHaxe4Data.haxeVersion + " (ES6)",
+			backgroundColor: "#66FF66",
+			borderColor: "#00FF00",
+			borderWidth: 1,
+			data: [for (label in labels) null]
+		};
+
 		var data = {
 			labels: labels,
 			datasets: [haxe3Dataset, haxe4Dataset]
@@ -120,6 +128,10 @@ class BenchmarkJS {
 				continue;
 			}
 			haxe4Dataset.data[index] = Math.round(target.time * 1000) / 1000;
+			if (target.name == NodeJs) {
+				var time:Null<Float> = getHistoryTime(latestHaxe4Data, NodeJsEs6);
+				haxe4ES6Dataset.data[index] = Math.round(time * 1000) / 1000;
+			}
 		}
 		var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("latestBenchmarks"), CanvasElement).getContext("2d");
 
@@ -221,7 +233,7 @@ class BenchmarkJS {
 			}
 			datasetData.push({
 				time: Math.round(time * 1000) / 1000,
-				time2: time2,
+				time2: Math.round(time2 * 1000) / 1000,
 				date: run.date,
 				dataset: Haxe4
 			});
