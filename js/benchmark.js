@@ -92,12 +92,24 @@ BenchmarkJS.prototype = {
 			_g2.push(null);
 		}
 		var haxe4Dataset = { label : latestHaxe4Data1, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, data : _g2};
+		var haxe4ES6Dataset_label = latestHaxe4Data.haxeVersion + " (ES6)";
+		var haxe4ES6Dataset_backgroundColor = "#66FF66";
+		var haxe4ES6Dataset_borderColor = "#00FF00";
+		var haxe4ES6Dataset_borderWidth = 1;
+		var _g4 = [];
+		var _g5 = 0;
+		while(_g5 < labels.length) {
+			var label2 = labels[_g5];
+			++_g5;
+			_g4.push(null);
+		}
+		var haxe4ES6Dataset_data = _g4;
 		var data = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset]};
-		var _g4 = 0;
-		var _g5 = latestHaxe3Data.targets;
-		while(_g4 < _g5.length) {
-			var target = _g5[_g4];
-			++_g4;
+		var _g6 = 0;
+		var _g7 = latestHaxe3Data.targets;
+		while(_g6 < _g7.length) {
+			var target = _g7[_g6];
+			++_g6;
 			var index = data.labels.indexOf(target.name);
 			if(index < 0) {
 				continue;
@@ -107,16 +119,20 @@ BenchmarkJS.prototype = {
 			}
 			haxe3Dataset.data[index] = Math.round(target.time * 1000) / 1000;
 		}
-		var _g6 = 0;
-		var _g7 = latestHaxe4Data.targets;
-		while(_g6 < _g7.length) {
-			var target1 = _g7[_g6];
-			++_g6;
+		var _g8 = 0;
+		var _g9 = latestHaxe4Data.targets;
+		while(_g8 < _g9.length) {
+			var target1 = _g9[_g8];
+			++_g8;
 			var index1 = data.labels.indexOf(target1.name);
 			if(index1 < 0) {
 				continue;
 			}
 			haxe4Dataset.data[index1] = Math.round(target1.time * 1000) / 1000;
+			if(target1.name == "NodeJS") {
+				var time = this.getHistoryTime(latestHaxe4Data,"NodeJS (ES6)");
+				haxe4ES6Dataset_data[index1] = Math.round(time * 1000) / 1000;
+			}
 		}
 		var ctx = (js_Boot.__cast(window.document.getElementById("latestBenchmarks") , HTMLCanvasElement)).getContext("2d");
 		var options = { type : "bar", data : data, options : { responsive : true, legend : { position : "top"}, title : { display : true, text : "latest benchmark results"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
@@ -158,7 +174,7 @@ BenchmarkJS.prototype = {
 			if(target == "NodeJS") {
 				time2 = this.getHistoryTime(run1,"NodeJS (ES6)");
 			}
-			datasetData.push({ time : Math.round(time1 * 1000) / 1000, time2 : time2, date : run1.date, dataset : data_Dataset.Haxe4});
+			datasetData.push({ time : Math.round(time1 * 1000) / 1000, time2 : Math.round(time2 * 1000) / 1000, date : run1.date, dataset : data_Dataset.Haxe4});
 		}
 		datasetData.sort($bind(this,this.sortDate));
 		var _g4 = 0;
@@ -170,10 +186,12 @@ BenchmarkJS.prototype = {
 			case 0:
 				haxe3Dataset.data.push(item.time);
 				haxe4Dataset.data.push(null);
+				haxe4ES6Dataset.data.push(null);
 				break;
 			case 1:
 				haxe3Dataset.data.push(null);
 				haxe4Dataset.data.push(item.time);
+				haxe4ES6Dataset.data.push(item.time2);
 				break;
 			}
 		}
