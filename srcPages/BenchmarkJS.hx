@@ -272,7 +272,7 @@ class BenchmarkJS {
 			data.datasets = [haxe3Dataset, haxe4Dataset];
 		}
 		if (target == Jvm) {
-			data.datasets.push(haxe4Dataset);
+			data.datasets = [haxe4Dataset];
 			if (withAverage) {
 				data.datasets.push(haxe4SMADataset);
 			}
