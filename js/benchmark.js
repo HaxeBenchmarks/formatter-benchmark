@@ -182,7 +182,7 @@ BenchmarkJS.prototype = {
 			data1.datasets = [haxe3Dataset,haxe4Dataset];
 		}
 		if(target == "JVM") {
-			data1.datasets.push(haxe4Dataset);
+			data1.datasets = [haxe4Dataset];
 			if(this.withAverage) {
 				data1.datasets.push(haxe4SMADataset);
 			}
