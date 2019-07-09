@@ -4,13 +4,20 @@ import js.Syntax;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 import js.jquery.JQuery;
+import js.jquery.Event;
 import json2object.JsonParser;
 import data.TestRun;
+import data.ExponentialMovingAverage;
+import data.IMovingAverage;
+import data.SimpleMovingAverage;
 
 class BenchmarkJS {
 	var haxe3Data:Null<ArchivedResults>;
 	var haxe4Data:Null<ArchivedResults>;
 	var documentLoaded:Bool;
+	var windowSize:Int;
+	var averageFactory:(windowSize:Int) -> IMovingAverage;
+	var withAverage:Bool;
 
 	public static function main() {
 		new BenchmarkJS();
@@ -20,11 +27,36 @@ class BenchmarkJS {
 		haxe3Data = null;
 		haxe4Data = null;
 		documentLoaded = false;
+		windowSize = 6;
+		averageFactory = SimpleMovingAverage.new;
+		withAverage = true;
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
 			documentLoaded = true;
 			checkLoaded();
 		});
+		new JQuery("#average").change(changeAverage);
+		new JQuery("#averageWindow").change(changeAverageWindow);
+	}
+
+	function changeAverage(event:Event) {
+		switch (new JQuery("#average").val()) {
+			case "SMA":
+				withAverage = true;
+				averageFactory = SimpleMovingAverage.new;
+			case "EMA":
+				withAverage = true;
+				averageFactory = ExponentialMovingAverage.new;
+			default:
+				withAverage = false;
+				averageFactory = SimpleMovingAverage.new;
+		}
+		showData();
+	}
+
+	function changeAverageWindow(event:Event) {
+		windowSize = Std.parseInt(new JQuery("#averageWindow").val());
+		changeAverage(event);
 	}
 
 	function requestArchivedData() {
@@ -120,17 +152,17 @@ class BenchmarkJS {
 			if (target.name == Jvm) {
 				continue;
 			}
-			haxe3Dataset.data[index] = Math.round(target.time * 1000) / 1000;
+			haxe3Dataset.data[index] = target.time;
 		}
 		for (target in latestHaxe4Data.targets) {
 			var index:Int = data.labels.indexOf(target.name);
 			if (index < 0) {
 				continue;
 			}
-			haxe4Dataset.data[index] = Math.round(target.time * 1000) / 1000;
+			haxe4Dataset.data[index] = target.time;
 			if (target.name == NodeJs) {
 				var time:Null<Float> = getHistoryTime(latestHaxe4Data, NodeJsEs6);
-				haxe4ES6Dataset.data[index] = Math.round(time * 1000) / 1000;
+				haxe4ES6Dataset.data[index] = time;
 			}
 		}
 		var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("latestBenchmarks"), CanvasElement).getContext("2d");
@@ -140,6 +172,9 @@ class BenchmarkJS {
 			data: data,
 			options: {
 				responsive: true,
+				animation: {
+					duration: 0
+				},
 				legend: {
 					position: "top",
 				},
@@ -180,6 +215,15 @@ class BenchmarkJS {
 			spanGaps: true,
 			data: []
 		};
+		var haxe3SMADataset = {
+			label: target + " (Haxe 3 avg)",
+			backgroundColor: "#FFCCCC",
+			borderColor: "#FFCCCC",
+			borderWidth: 1,
+			fill: false,
+			spanGaps: true,
+			data: []
+		};
 
 		var haxe4Dataset = {
 			label: target + " (Haxe 4)",
@@ -190,6 +234,16 @@ class BenchmarkJS {
 			spanGaps: true,
 			data: []
 		};
+		var haxe4SMADataset = {
+			label: target + " (Haxe 4 avg)",
+			backgroundColor: "#CCCCFF",
+			borderColor: "#CCCCFF",
+			borderWidth: 1,
+			fill: false,
+			spanGaps: true,
+			data: []
+		};
+
 		var haxe4ES6Dataset = {
 			label: target + " (Haxe 4 (ES6))",
 			backgroundColor: "#66FF66",
@@ -199,29 +253,54 @@ class BenchmarkJS {
 			spanGaps: true,
 			data: []
 		};
+		var haxe4ES6SMADataset = {
+			label: target + " (Haxe 4 (ES6) avg)",
+			backgroundColor: "#CCFFCC",
+			borderColor: "#CCFFCC",
+			borderWidth: 1,
+			fill: false,
+			spanGaps: true,
+			data: []
+		};
 		var data = {
 			labels: [],
-			datasets: [haxe3Dataset, haxe4Dataset]
+			datasets: []
 		};
+		if (withAverage) {
+			data.datasets = [haxe3Dataset, haxe3SMADataset, haxe4Dataset, haxe4SMADataset];
+		} else {
+			data.datasets = [haxe3Dataset, haxe4Dataset];
+		}
 		if (target == Jvm) {
-			data.datasets = [haxe4Dataset];
+			data.datasets.push(haxe4Dataset);
+			if (withAverage) {
+				data.datasets.push(haxe4SMADataset);
+			}
 		}
 		if (target == NodeJs) {
 			data.datasets.push(haxe4ES6Dataset);
+			if (withAverage) {
+				data.datasets.push(haxe4ES6SMADataset);
+			}
 		}
 
 		var datasetData:Array<HistoricalDataPoint> = [];
+		var average:IMovingAverage = averageFactory(windowSize);
 		for (run in haxe3Data) {
 			var time:Null<Float> = getHistoryTime(run, target);
 			if (time == null) {
 				continue;
 			}
+			average.addValue(time);
 			datasetData.push({
-				time: Math.round(time * 1000) / 1000,
+				time: time,
+				sma: average.getAverage(),
 				date: run.date,
 				dataset: Haxe3
 			});
 		}
+		var average:IMovingAverage = averageFactory(windowSize);
+		var average2:IMovingAverage = averageFactory(windowSize);
 		for (run in haxe4Data) {
 			var time:Null<Float> = getHistoryTime(run, target);
 			if (time == null) {
@@ -230,13 +309,14 @@ class BenchmarkJS {
 			var time2:Null<Float> = null;
 			if (target == NodeJs) {
 				time2 = getHistoryTime(run, NodeJsEs6);
-				if (time2 != null) {
-					time2 = Math.round(time2 * 1000) / 1000;
-				}
 			}
+			average.addValue(time);
+			average2.addValue(time2);
 			datasetData.push({
-				time: Math.round(time * 1000) / 1000,
+				time: time,
+				sma: average.getAverage(),
 				time2: time2,
+				sma2: average2.getAverage(),
 				date: run.date,
 				dataset: Haxe4
 			});
@@ -247,12 +327,18 @@ class BenchmarkJS {
 			switch (item.dataset) {
 				case Haxe3:
 					haxe3Dataset.data.push(item.time);
+					haxe3SMADataset.data.push(item.sma);
 					haxe4Dataset.data.push(null);
+					haxe4SMADataset.data.push(null);
 					haxe4ES6Dataset.data.push(null);
+					haxe4ES6SMADataset.data.push(null);
 				case Haxe4:
 					haxe3Dataset.data.push(null);
+					haxe3SMADataset.data.push(null);
 					haxe4Dataset.data.push(item.time);
+					haxe4SMADataset.data.push(item.sma);
 					haxe4ES6Dataset.data.push(item.time2);
+					haxe4ES6SMADataset.data.push(item.sma2);
 			}
 		}
 
@@ -262,12 +348,23 @@ class BenchmarkJS {
 			data: data,
 			options: {
 				responsive: true,
+				animation: {
+					duration: 0
+				},
 				legend: {
 					position: "top",
 				},
 				title: {
 					display: true,
 					text: '$target benchmark results'
+				},
+				tooltips: {
+					mode: "index",
+					intersect: false
+				},
+				hover: {
+					mode: "nearest",
+					intersect: true
 				},
 				scales: {
 					yAxes: [
@@ -294,7 +391,7 @@ class BenchmarkJS {
 		return 0;
 	}
 
-	function getHistoryTime(testRun:TestRun, target:Target):Null<Float> {
+	function getHistoryTime(testRun:TestRun, target:Target):Null<TimeValue> {
 		for (runTarget in testRun.targets) {
 			if (target == runTarget.name) {
 				return runTarget.time;
@@ -319,8 +416,10 @@ abstract Target(String) to String {
 }
 
 typedef HistoricalDataPoint = {
-	var time:Float;
-	var ?time2:Float;
+	var time:TimeValue;
+	var sma:TimeValue;
+	var ?time2:TimeValue;
+	var ?sma2:TimeValue;
 	var date:String;
 	var dataset:Dataset;
 }
