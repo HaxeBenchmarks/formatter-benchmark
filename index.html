@@ -7,6 +7,33 @@
 </head>
 
 <body>
+    <h1>Haxe Formatter Benchmark</h1>
+    <p>
+        <ul>
+            <li>runs on TravisCI</li>
+            <li>each commit triggers two build jobs one using Haxe 3.4.7 and one using Haxe 4 devlopment</li>
+            <li>a cron job triggers daily builds</li>
+            <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Java, JVM, Neko, NodeJS, PHP and Python
+                targets</li>
+            <li>Hashlink and JVM are not available on Haxe 3 (Hashlink VM doesn't compile, JVM target is Haxe 4 only)
+            </li>
+            <li>NodeJS compilation is run twice, with and without "-D js-es=6"</li>
+            <li>each target binary formats git versions of Haxe std, Openfl and Lime sources and reports total runtime
+            </li>
+            <li>results are uploaded automatically after every build (there is no automatic reload)</li>
+        </ul>
+    </p>
+
+    <form>
+        <select id="average">
+            <option value="none">none</option>
+            <option value="SMA" selected>simple moving average</option>
+            <option value="EMA">exponential moving average</option>
+        </select>
+        <label for="averageWindow">average window size</label>
+        <input id="averageWindow" name="averageWindow" type="number" min="2" value="6">
+    </form>
+
     <div stlye="display: flex; flex-wrap: wrap; width:100%;">
         <canvas id="latestBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
             class="chartjs-render-monitor"></canvas>
