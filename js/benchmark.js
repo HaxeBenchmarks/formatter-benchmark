@@ -12,18 +12,51 @@ var BenchmarkJS = function() {
 	this.haxe3Data = null;
 	this.haxe4Data = null;
 	this.documentLoaded = false;
+	this.windowSize = 6;
+	this.averageFactory = function(windowSize) {
+		return new data_SimpleMovingAverage(windowSize);
+	};
+	this.withAverage = true;
 	this.requestArchivedData();
 	$(window.document).ready(function() {
 		_gthis.documentLoaded = true;
 		_gthis.checkLoaded();
 	});
+	$("#average").change($bind(this,this.changeAverage));
+	$("#averageWindow").change($bind(this,this.changeAverageWindow));
 };
 BenchmarkJS.__name__ = true;
 BenchmarkJS.main = function() {
 	new BenchmarkJS();
 };
 BenchmarkJS.prototype = {
-	requestArchivedData: function() {
+	changeAverage: function(event) {
+		switch($("#average").val()) {
+		case "EMA":
+			this.withAverage = true;
+			this.averageFactory = function(windowSize) {
+				return new data_ExponentialMovingAverage(windowSize);
+			};
+			break;
+		case "SMA":
+			this.withAverage = true;
+			this.averageFactory = function(windowSize1) {
+				return new data_SimpleMovingAverage(windowSize1);
+			};
+			break;
+		default:
+			this.withAverage = false;
+			this.averageFactory = function(windowSize2) {
+				return new data_SimpleMovingAverage(windowSize2);
+			};
+		}
+		this.showData();
+	}
+	,changeAverageWindow: function(event) {
+		this.windowSize = Std.parseInt($("#averageWindow").val());
+		this.changeAverage(event);
+	}
+	,requestArchivedData: function() {
 		var _gthis = this;
 		var request = new haxe_http_HttpJs("data/archiveHaxe3.json");
 		request.onData = function(data) {
@@ -32,7 +65,7 @@ BenchmarkJS.prototype = {
 			_gthis.checkLoaded();
 		};
 		request.onError = function(msg) {
-			console.log("srcPages/BenchmarkJS.hx:39:","failed to download Haxe 3 data: " + msg);
+			console.log("srcPages/BenchmarkJS.hx:71:","failed to download Haxe 3 data: " + msg);
 		};
 		request.request();
 		var request1 = new haxe_http_HttpJs("data/archiveHaxe4.json");
@@ -42,7 +75,7 @@ BenchmarkJS.prototype = {
 			_gthis.checkLoaded();
 		};
 		request1.onError = function(msg1) {
-			console.log("srcPages/BenchmarkJS.hx:51:","failed to download Haxe 4 data: " + msg1);
+			console.log("srcPages/BenchmarkJS.hx:83:","failed to download Haxe 4 data: " + msg1);
 		};
 		request1.request();
 	}
@@ -101,52 +134,67 @@ BenchmarkJS.prototype = {
 			_g4.push(null);
 		}
 		var haxe4ES6Dataset1 = { label : haxe4ES6Dataset, backgroundColor : "#66FF66", borderColor : "#00FF00", borderWidth : 1, data : _g4};
-		var data = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset1]};
+		var data1 = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset1]};
 		var _g6 = 0;
 		var _g7 = latestHaxe3Data.targets;
 		while(_g6 < _g7.length) {
 			var target = _g7[_g6];
 			++_g6;
-			var index = data.labels.indexOf(target.name);
+			var index = data1.labels.indexOf(target.name);
 			if(index < 0) {
 				continue;
 			}
 			if(target.name == "JVM") {
 				continue;
 			}
-			haxe3Dataset.data[index] = Math.round(target.time * 1000) / 1000;
+			haxe3Dataset.data[index] = target.time;
 		}
 		var _g8 = 0;
 		var _g9 = latestHaxe4Data.targets;
 		while(_g8 < _g9.length) {
 			var target1 = _g9[_g8];
 			++_g8;
-			var index1 = data.labels.indexOf(target1.name);
+			var index1 = data1.labels.indexOf(target1.name);
 			if(index1 < 0) {
 				continue;
 			}
-			haxe4Dataset.data[index1] = Math.round(target1.time * 1000) / 1000;
+			haxe4Dataset.data[index1] = target1.time;
 			if(target1.name == "NodeJS") {
 				var time = this.getHistoryTime(latestHaxe4Data,"NodeJS (ES6)");
-				haxe4ES6Dataset1.data[index1] = Math.round(time * 1000) / 1000;
+				haxe4ES6Dataset1.data[index1] = data__$TestRun_TimeValue_$Impl_$.fromFloat(time);
 			}
 		}
 		var ctx = (js_Boot.__cast(window.document.getElementById("latestBenchmarks") , HTMLCanvasElement)).getContext("2d");
-		var options = { type : "bar", data : data, options : { responsive : true, legend : { position : "top"}, title : { display : true, text : "latest benchmark results"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
+		var options = { type : "bar", data : data1, options : { responsive : true, animation : { duration : 0}, legend : { position : "top"}, title : { display : true, text : "latest benchmark results"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
 		new Chart (ctx, options);
 	}
 	,showHistory: function(target,canvasId) {
 		var haxe3Dataset = { label : target + " (Haxe 3)", backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, fill : false, spanGaps : true, data : []};
+		var haxe3SMADataset = { label : target + " (Haxe 3 avg)", backgroundColor : "#FFCCCC", borderColor : "#FFCCCC", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var haxe4Dataset = { label : target + " (Haxe 4)", backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, spanGaps : true, data : []};
+		var haxe4SMADataset = { label : target + " (Haxe 4 avg)", backgroundColor : "#CCCCFF", borderColor : "#CCCCFF", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var haxe4ES6Dataset = { label : target + " (Haxe 4 (ES6))", backgroundColor : "#66FF66", borderColor : "#00FF00", borderWidth : 1, fill : false, spanGaps : true, data : []};
-		var data1 = { labels : [], datasets : [haxe3Dataset,haxe4Dataset]};
+		var haxe4ES6SMADataset = { label : target + " (Haxe 4 (ES6) avg)", backgroundColor : "#CCFFCC", borderColor : "#CCFFCC", borderWidth : 1, fill : false, spanGaps : true, data : []};
+		var data1 = { labels : [], datasets : []};
+		if(this.withAverage) {
+			data1.datasets = [haxe3Dataset,haxe3SMADataset,haxe4Dataset,haxe4SMADataset];
+		} else {
+			data1.datasets = [haxe3Dataset,haxe4Dataset];
+		}
 		if(target == "JVM") {
-			data1.datasets = [haxe4Dataset];
+			data1.datasets.push(haxe4Dataset);
+			if(this.withAverage) {
+				data1.datasets.push(haxe4SMADataset);
+			}
 		}
 		if(target == "NodeJS") {
 			data1.datasets.push(haxe4ES6Dataset);
+			if(this.withAverage) {
+				data1.datasets.push(haxe4ES6SMADataset);
+			}
 		}
 		var datasetData = [];
+		var average = this.averageFactory(this.windowSize);
 		var _g = 0;
 		var _g1 = this.haxe3Data;
 		while(_g < _g1.length) {
@@ -156,8 +204,11 @@ BenchmarkJS.prototype = {
 			if(time == null) {
 				continue;
 			}
-			datasetData.push({ time : Math.round(time * 1000) / 1000, date : run.date, dataset : data_Dataset.Haxe3});
+			average.addValue(time);
+			datasetData.push({ time : data__$TestRun_TimeValue_$Impl_$.fromFloat(time), sma : average.getAverage(), date : run.date, dataset : data_Dataset.Haxe3});
 		}
+		var average1 = this.averageFactory(this.windowSize);
+		var average2 = this.averageFactory(this.windowSize);
 		var _g2 = 0;
 		var _g3 = this.haxe4Data;
 		while(_g2 < _g3.length) {
@@ -170,11 +221,10 @@ BenchmarkJS.prototype = {
 			var time2 = null;
 			if(target == "NodeJS") {
 				time2 = this.getHistoryTime(run1,"NodeJS (ES6)");
-				if(time2 != null) {
-					time2 = Math.round(time2 * 1000) / 1000;
-				}
 			}
-			datasetData.push({ time : Math.round(time1 * 1000) / 1000, time2 : time2, date : run1.date, dataset : data_Dataset.Haxe4});
+			average1.addValue(time1);
+			average2.addValue(time2);
+			datasetData.push({ time : data__$TestRun_TimeValue_$Impl_$.fromFloat(time1), sma : average1.getAverage(), time2 : data__$TestRun_TimeValue_$Impl_$.fromFloat(time2), sma2 : average2.getAverage(), date : run1.date, dataset : data_Dataset.Haxe4});
 		}
 		datasetData.sort($bind(this,this.sortDate));
 		var _g4 = 0;
@@ -185,18 +235,24 @@ BenchmarkJS.prototype = {
 			switch(item.dataset._hx_index) {
 			case 0:
 				haxe3Dataset.data.push(item.time);
+				haxe3SMADataset.data.push(item.sma);
 				haxe4Dataset.data.push(null);
+				haxe4SMADataset.data.push(null);
 				haxe4ES6Dataset.data.push(null);
+				haxe4ES6SMADataset.data.push(null);
 				break;
 			case 1:
 				haxe3Dataset.data.push(null);
+				haxe3SMADataset.data.push(null);
 				haxe4Dataset.data.push(item.time);
+				haxe4SMADataset.data.push(item.sma);
 				haxe4ES6Dataset.data.push(item.time2);
+				haxe4ES6SMADataset.data.push(item.sma2);
 				break;
 			}
 		}
 		var ctx = (js_Boot.__cast(window.document.getElementById(canvasId) , HTMLCanvasElement)).getContext("2d");
-		var options = { type : "line", data : data1, options : { responsive : true, legend : { position : "top"}, title : { display : true, text : "" + target + " benchmark results"}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
+		var options = { type : "line", data : data1, options : { responsive : true, animation : { duration : 0}, legend : { position : "top"}, title : { display : true, text : "" + target + " benchmark results"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
 		new Chart (ctx, options);
 	}
 	,sortDate: function(a,b) {
@@ -599,7 +655,7 @@ JsonParser_$7.__name__ = true;
 JsonParser_$7.__super__ = json2object_reader_BaseParser;
 JsonParser_$7.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	onIncorrectType: function(pos,variable) {
-		this.errors.push(json2object_Error.IncorrectType(variable,"{ time : Float, outputLines : Int, name : String, inputLines : Int }",pos));
+		this.errors.push(json2object_Error.IncorrectType(variable,"{ time : data.TimeValue, outputLines : Int, name : String, inputLines : Int }",pos));
 		json2object_reader_BaseParser.prototype.onIncorrectType.call(this,pos,variable);
 	}
 	,loadJsonNull: function(pos,variable) {
@@ -664,17 +720,19 @@ var JsonParser_$9 = function(errors,putils,errorType) {
 		errorType = 0;
 	}
 	json2object_reader_BaseParser.call(this,errors,putils,errorType);
-	this.value = 0;
 };
 JsonParser_$9.__name__ = true;
 JsonParser_$9.__super__ = json2object_reader_BaseParser;
 JsonParser_$9.prototype = $extend(json2object_reader_BaseParser.prototype,{
 	onIncorrectType: function(pos,variable) {
-		this.errors.push(json2object_Error.IncorrectType(variable,"Float",pos));
+		this.errors.push(json2object_Error.IncorrectType(variable,"data.TimeValue",pos));
 		json2object_reader_BaseParser.prototype.onIncorrectType.call(this,pos,variable);
 	}
+	,loadJsonNull: function(pos,variable) {
+		this.value = null;
+	}
 	,loadJsonNumber: function(f,pos,variable) {
-		this.value = this.loadJsonFloat(f,pos,variable,this.value);
+		this.value = data__$TestRun_TimeValue_$Impl_$.fromFloat(this.loadJsonFloat(f,pos,variable,this.value));
 	}
 	,getAuto: function() {
 		return new JsonParser_$9([],this.putils,0).loadJson(new hxjsonast_Json(hxjsonast_JsonValue.JNull,new hxjsonast_Position("",0,1)));
@@ -910,9 +968,89 @@ StringTools.rtrim = function(s) {
 StringTools.trim = function(s) {
 	return StringTools.ltrim(StringTools.rtrim(s));
 };
+var data_IMovingAverage = function() { };
+data_IMovingAverage.__name__ = true;
+data_IMovingAverage.prototype = {
+	__class__: data_IMovingAverage
+};
+var data_ExponentialMovingAverage = function(windowSize) {
+	this.values = [];
+	this.prevEMA = null;
+	this.currEMA = null;
+	this.alpha = 2 / (windowSize + 1);
+	this.windowSize = windowSize;
+};
+data_ExponentialMovingAverage.__name__ = true;
+data_ExponentialMovingAverage.__interfaces__ = [data_IMovingAverage];
+data_ExponentialMovingAverage.prototype = {
+	addValue: function(value) {
+		if(value == null) {
+			return;
+		}
+		if(this.prevEMA == null) {
+			this.values.push(value);
+			if(this.values.length == this.windowSize) {
+				var total = 0;
+				var _g = 0;
+				var _g1 = this.values;
+				while(_g < _g1.length) {
+					var value1 = _g1[_g];
+					++_g;
+					total += value1;
+				}
+				this.prevEMA = total / this.windowSize;
+				this.currEMA = this.prevEMA;
+			}
+			return;
+		}
+		this.currEMA = value * this.alpha + this.prevEMA * (1 - this.alpha);
+	}
+	,getAverage: function() {
+		return data__$TestRun_TimeValue_$Impl_$.fromFloat(this.currEMA);
+	}
+	,__class__: data_ExponentialMovingAverage
+};
+var data_SimpleMovingAverage = function(windowSize) {
+	this.values = [];
+	this.total = 0;
+	this.windowSize = windowSize;
+};
+data_SimpleMovingAverage.__name__ = true;
+data_SimpleMovingAverage.__interfaces__ = [data_IMovingAverage];
+data_SimpleMovingAverage.prototype = {
+	addValue: function(value) {
+		if(value == null) {
+			return;
+		}
+		this.values.push(value);
+		this.total += value;
+		if(this.values.length > this.windowSize) {
+			this.total -= this.values.shift();
+		}
+	}
+	,getAverage: function() {
+		if(this.values.length < this.windowSize) {
+			return null;
+		}
+		return data__$TestRun_TimeValue_$Impl_$.fromFloat(this.total / this.values.length);
+	}
+	,__class__: data_SimpleMovingAverage
+};
 var data_Dataset = $hxEnums["data.Dataset"] = { __ename__ : true, __constructs__ : ["Haxe3","Haxe4"]
 	,Haxe3: {_hx_index:0,__enum__:"data.Dataset",toString:$estr}
 	,Haxe4: {_hx_index:1,__enum__:"data.Dataset",toString:$estr}
+};
+var data__$TestRun_TimeValue_$Impl_$ = {};
+data__$TestRun_TimeValue_$Impl_$.__name__ = true;
+data__$TestRun_TimeValue_$Impl_$._new = function(value) {
+	var this1 = value;
+	return this1;
+};
+data__$TestRun_TimeValue_$Impl_$.fromFloat = function(value) {
+	if(value == null) {
+		return null;
+	}
+	return data__$TestRun_TimeValue_$Impl_$._new(Math.round(value * 1000) / 1000);
 };
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
