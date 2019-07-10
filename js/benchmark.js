@@ -135,12 +135,21 @@ BenchmarkJS.prototype = {
 			_g4.push(null);
 		}
 		var haxe4ES6Dataset1 = { label : haxe4ES6Dataset, backgroundColor : "#66FF66", borderColor : "#00FF00", borderWidth : 1, data : _g4};
-		var data1 = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset1]};
-		var _g6 = 0;
-		var _g7 = latestHaxe3Data.targets;
-		while(_g6 < _g7.length) {
-			var target = _g7[_g6];
-			++_g6;
+		var haxe4HLCDataset = latestHaxe4Data.haxeVersion + " (HL/C)";
+		var _g6 = [];
+		var _g7 = 0;
+		while(_g7 < labels.length) {
+			var label3 = labels[_g7];
+			++_g7;
+			_g6.push(null);
+		}
+		var haxe4HLCDataset1 = { label : haxe4HLCDataset, backgroundColor : "#a866ff", borderColor : "#3f0090", borderWidth : 1, data : _g6};
+		var data1 = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset1,haxe4HLCDataset1]};
+		var _g8 = 0;
+		var _g9 = latestHaxe3Data.targets;
+		while(_g8 < _g9.length) {
+			var target = _g9[_g8];
+			++_g8;
 			var index = data1.labels.indexOf(target.name);
 			if(index < 0) {
 				continue;
@@ -150,11 +159,11 @@ BenchmarkJS.prototype = {
 			}
 			haxe3Dataset.data[index] = target.time;
 		}
-		var _g8 = 0;
-		var _g9 = latestHaxe4Data.targets;
-		while(_g8 < _g9.length) {
-			var target1 = _g9[_g8];
-			++_g8;
+		var _g10 = 0;
+		var _g11 = latestHaxe4Data.targets;
+		while(_g10 < _g11.length) {
+			var target1 = _g11[_g10];
+			++_g10;
 			var index1 = data1.labels.indexOf(target1.name);
 			if(index1 < 0) {
 				continue;
@@ -163,6 +172,10 @@ BenchmarkJS.prototype = {
 			if(target1.name == "NodeJS") {
 				var time = this.getHistoryTime(latestHaxe4Data,"NodeJS (ES6)");
 				haxe4ES6Dataset1.data[index1] = data__$TestRun_TimeValue_$Impl_$.fromFloat(time);
+			}
+			if(target1.name == "Hashlink") {
+				var time1 = this.getHistoryTime(latestHaxe4Data,"Hashlink/C");
+				haxe4HLCDataset1.data[index1] = data__$TestRun_TimeValue_$Impl_$.fromFloat(time1);
 			}
 		}
 		var ctx = (js_Boot.__cast(window.document.getElementById("latestBenchmarks") , HTMLCanvasElement)).getContext("2d");
