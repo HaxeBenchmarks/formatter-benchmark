@@ -20,6 +20,8 @@ java -jar out/jvm/Cli.jar $DATA
 resetGit
 /usr/local/bin/hl out/formatter.hl $DATA
 resetGit
+./out/hlformatterCLI $DATA
+resetGit
 mono out/cs/bin/Cli.exe $DATA
 resetGit
 php out/php/index.php $DATA

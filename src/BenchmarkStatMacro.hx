@@ -46,6 +46,9 @@ class BenchmarkStatMacro {
 		if (~/\.hl$/.match(output)) {
 			return "Hashlink";
 		}
+		if (~/\.c$/.match(output)) {
+			return "Hashlink/C";
+		}
 		if (~/cpp$/.match(output)) {
 			return "C++";
 		}

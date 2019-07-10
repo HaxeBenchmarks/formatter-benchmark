@@ -104,6 +104,7 @@ class BenchmarkJS {
 		showHistory(Java, "javaBenchmarks");
 		showHistory(Jvm, "jvmBenchmarks");
 		showHistory(Hashlink, "hlBenchmarks");
+		showHistory(HashlinkC, "hlcBenchmarks");
 		showHistory(Csharp, "csharpBenchmarks");
 		showHistory(NodeJs, "nodeBenchmarks");
 		showHistory(Neko, "nekoBenchmarks");
@@ -406,6 +407,7 @@ abstract Target(String) to String {
 	var Cpp = "C++";
 	var Csharp = "C#";
 	var Hashlink = "Hashlink";
+	var HashlinkC = "Hashlink/C";
 	var Java = "Java";
 	var Jvm = "JVM";
 	var Neko = "Neko";
