@@ -141,9 +141,17 @@ class BenchmarkJS {
 			data: [for (label in labels) null]
 		};
 
+		var haxe4HLCDataset = {
+			label: latestHaxe4Data.haxeVersion + " (HL/C)",
+			backgroundColor: "#a866ff",
+			borderColor: "#3f0090",
+			borderWidth: 1,
+			data: [for (label in labels) null]
+		};
+
 		var data = {
 			labels: labels,
-			datasets: [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset]
+			datasets: [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset, haxe4HLCDataset]
 		};
 		for (target in latestHaxe3Data.targets) {
 			var index:Int = data.labels.indexOf(target.name);
@@ -164,6 +172,10 @@ class BenchmarkJS {
 			if (target.name == NodeJs) {
 				var time:Null<Float> = getHistoryTime(latestHaxe4Data, NodeJsEs6);
 				haxe4ES6Dataset.data[index] = time;
+			}
+			if (target.name == Hashlink) {
+				var time:Null<Float> = getHistoryTime(latestHaxe4Data, HashlinkC);
+				haxe4HLCDataset.data[index] = time;
 			}
 		}
 		var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("latestBenchmarks"), CanvasElement).getContext("2d");
