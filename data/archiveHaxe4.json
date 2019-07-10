@@ -970,5 +970,41 @@
       }
     ],
     "date": "2019-07-09 22:10:01"
+  },
+  {
+    "haxeVersion": "4.0.0-rc.3+60fb690a3",
+    "targets": [
+      {
+        "name": "C++",
+        "outputLines": 364498,
+        "inputLines": 363797,
+        "time": 13.055
+      },
+      {
+        "name": "Java",
+        "outputLines": 364498,
+        "inputLines": 363797,
+        "time": 21.218
+      },
+      {
+        "name": "JVM",
+        "outputLines": 364498,
+        "inputLines": 363797,
+        "time": 34.756
+      },
+      {
+        "name": "Hashlink",
+        "outputLines": 364498,
+        "inputLines": 363797,
+        "time": 27.278
+      },
+      {
+        "name": "C#",
+        "outputLines": 364498,
+        "inputLines": 363797,
+        "time": 26.264
+      }
+    ],
+    "date": "2019-07-10 21:23:34"
   }
 ]
