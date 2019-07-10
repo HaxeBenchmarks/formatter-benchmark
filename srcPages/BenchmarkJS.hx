@@ -18,6 +18,7 @@ class BenchmarkJS {
 	var windowSize:Int;
 	var averageFactory:(windowSize:Int) -> IMovingAverage;
 	var withAverage:Bool;
+	var chartObjects:Map<String, Any>;
 
 	public static function main() {
 		new BenchmarkJS();
@@ -30,6 +31,7 @@ class BenchmarkJS {
 		windowSize = 6;
 		averageFactory = SimpleMovingAverage.new;
 		withAverage = true;
+		chartObjects = new Map<String, Any>();
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
 			documentLoaded = true;
@@ -178,7 +180,6 @@ class BenchmarkJS {
 				haxe4HLCDataset.data[index] = time;
 			}
 		}
-		var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("latestBenchmarks"), CanvasElement).getContext("2d");
 
 		var options = {
 			type: "bar",
@@ -215,7 +216,15 @@ class BenchmarkJS {
 				}
 			}
 		};
-		Syntax.code("new Chart ({0}, {1})", ctx, options);
+		if (!chartObjects.exists("latest")) {
+			var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("latestBenchmarks"), CanvasElement).getContext("2d");
+			var chart:Any = Syntax.code("new Chart({0}, {1})", ctx, options);
+			chartObjects.set("latest", chart);
+			return;
+		}
+		var chart:Any = chartObjects.get("latest");
+		untyped chart.data = data;
+		Syntax.code("{0}.update()", chart);
 	}
 
 	function showHistory(target:Target, canvasId:String) {
@@ -355,7 +364,6 @@ class BenchmarkJS {
 			}
 		}
 
-		var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById(canvasId), CanvasElement).getContext("2d");
 		var options = {
 			type: "line",
 			data: data,
@@ -391,7 +399,15 @@ class BenchmarkJS {
 				}
 			}
 		};
-		Syntax.code("new Chart ({0}, {1})", ctx, options);
+		if (!chartObjects.exists(target)) {
+			var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById(canvasId), CanvasElement).getContext("2d");
+			var chart:Any = Syntax.code("new Chart({0}, {1})", ctx, options);
+			chartObjects.set(target, chart);
+			return;
+		}
+		var chart:Any = chartObjects.get(target);
+		untyped chart.data = data;
+		Syntax.code("{0}.update()", chart);
 	}
 
 	function sortDate(a:HistoricalDataPoint, b:HistoricalDataPoint):Int {
