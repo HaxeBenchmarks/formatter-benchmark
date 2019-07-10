@@ -97,6 +97,7 @@ BenchmarkJS.prototype = {
 		this.showHistory("Java","javaBenchmarks");
 		this.showHistory("JVM","jvmBenchmarks");
 		this.showHistory("Hashlink","hlBenchmarks");
+		this.showHistory("Hashlink/C","hlcBenchmarks");
 		this.showHistory("C#","csharpBenchmarks");
 		this.showHistory("NodeJS","nodeBenchmarks");
 		this.showHistory("Neko","nekoBenchmarks");
@@ -970,6 +971,7 @@ StringTools.trim = function(s) {
 };
 var data_IMovingAverage = function() { };
 data_IMovingAverage.__name__ = true;
+data_IMovingAverage.__isInterface__ = true;
 data_IMovingAverage.prototype = {
 	__class__: data_IMovingAverage
 };
@@ -1054,6 +1056,7 @@ data__$TestRun_TimeValue_$Impl_$.fromFloat = function(value) {
 };
 var haxe_IMap = function() { };
 haxe_IMap.__name__ = true;
+haxe_IMap.__isInterface__ = true;
 var haxe_ds_List = function() {
 	this.length = 0;
 };
@@ -1669,7 +1672,9 @@ js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 var js_Boot = function() { };
 js_Boot.__name__ = true;
 js_Boot.getClass = function(o) {
-	if(((o) instanceof Array) && o.__enum__ == null) {
+	if(o == null) {
+		return null;
+	} else if(((o) instanceof Array) && o.__enum__ == null) {
 		return Array;
 	} else {
 		var cl = o.__class__;
@@ -1814,10 +1819,7 @@ js_Boot.__instanceof = function(o,cl) {
 	default:
 		if(o != null) {
 			if(typeof(cl) == "function") {
-				if(((o) instanceof cl)) {
-					return true;
-				}
-				if(js_Boot.__interfLoop(js_Boot.getClass(o),cl)) {
+				if(js_Boot.__downcastCheck(o,cl)) {
 					return true;
 				}
 			} else if(typeof(cl) == "object" && js_Boot.__isNativeObj(cl)) {
@@ -1839,6 +1841,17 @@ js_Boot.__instanceof = function(o,cl) {
 		} else {
 			return false;
 		}
+	}
+};
+js_Boot.__downcastCheck = function(o,cl) {
+	if(!((o) instanceof cl)) {
+		if(cl.__isInterface__) {
+			return js_Boot.__interfLoop(js_Boot.getClass(o),cl);
+		} else {
+			return false;
+		}
+	} else {
+		return true;
 	}
 };
 js_Boot.__cast = function(o,t) {
