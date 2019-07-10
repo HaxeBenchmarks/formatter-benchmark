@@ -27,6 +27,7 @@ matrix:
       - haxelib install hxcpp
       - haxelib install hxjava
       - haxelib install hxcs
+      - haxelib install hashlink
     - haxe: development
       php: 7.3
       mono: latest
@@ -44,6 +45,7 @@ matrix:
       - haxelib install formatter
       - haxelib install hxjava
       - haxelib install hxcs
+      - haxelib install hashlink
 
 before_script:
   - phpenv config-rm xdebug.ini
