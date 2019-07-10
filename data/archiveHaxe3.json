@@ -1012,5 +1012,35 @@
         "inputLines": 363797
       }
     ]
+  },
+  {
+    "date": "2019-07-10 21:35:06",
+    "haxeVersion": "3.4.7",
+    "targets": [
+      {
+        "outputLines": 365683,
+        "name": "C++",
+        "time": 15.832,
+        "inputLines": 363797
+      },
+      {
+        "outputLines": 365683,
+        "name": "Java",
+        "time": 22.01,
+        "inputLines": 363797
+      },
+      {
+        "outputLines": 365683,
+        "name": "JVM",
+        "time": 22.246,
+        "inputLines": 363797
+      },
+      {
+        "outputLines": 365683,
+        "name": "C#",
+        "time": 49.226,
+        "inputLines": 363797
+      }
+    ]
   }
 ]
