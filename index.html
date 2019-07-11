@@ -13,9 +13,9 @@
             <li>runs on TravisCI</li>
             <li>each commit triggers two build jobs one using Haxe 3.4.7 and one using Haxe 4 devlopment</li>
             <li>a cron job triggers daily builds</li>
-            <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Java, JVM, Neko, NodeJS, PHP and Python
+            <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Hashlink/C, Java, JVM, Neko, NodeJS, PHP and Python
                 targets</li>
-            <li>Hashlink and JVM are not available on Haxe 3 (Hashlink VM won't compile; JVM target is Haxe 4 only)
+            <li>JVM is not available on Haxe 3 (Haxe 4 only)
             </li>
             <li>NodeJS compilation is run twice, with and without "-D js-es=6"</li>
             <li>each target binary formats git versions of Haxe std, Openfl and Lime sources and reports total runtime
