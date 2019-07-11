@@ -66,7 +66,7 @@ BenchmarkJS.prototype = {
 			_gthis.checkLoaded();
 		};
 		request.onError = function(msg) {
-			console.log("srcPages/BenchmarkJS.hx:74:","failed to download Haxe 3 data: " + msg);
+			console.log("srcPages/BenchmarkJS.hx:73:","failed to download Haxe 3 data: " + msg);
 		};
 		request.request();
 		var request1 = new haxe_http_HttpJs("data/archiveHaxe4.json");
@@ -76,7 +76,7 @@ BenchmarkJS.prototype = {
 			_gthis.checkLoaded();
 		};
 		request1.onError = function(msg1) {
-			console.log("srcPages/BenchmarkJS.hx:86:","failed to download Haxe 4 data: " + msg1);
+			console.log("srcPages/BenchmarkJS.hx:85:","failed to download Haxe 4 data: " + msg1);
 		};
 		request1.request();
 	}
@@ -127,7 +127,7 @@ BenchmarkJS.prototype = {
 			_g2.push(null);
 		}
 		var haxe4Dataset = { label : latestHaxe4Data1, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, data : _g2};
-		var haxe4ES6Dataset = latestHaxe4Data.haxeVersion + " (ES6)";
+		var haxe4ES6Dataset = latestHaxe4Data.haxeVersion + " (ES6 + HL/C)";
 		var _g4 = [];
 		var _g5 = 0;
 		while(_g5 < labels.length) {
@@ -136,21 +136,12 @@ BenchmarkJS.prototype = {
 			_g4.push(null);
 		}
 		var haxe4ES6Dataset1 = { label : haxe4ES6Dataset, backgroundColor : "#66FF66", borderColor : "#00FF00", borderWidth : 1, data : _g4};
-		var haxe4HLCDataset = latestHaxe4Data.haxeVersion + " (HL/C)";
-		var _g6 = [];
-		var _g7 = 0;
-		while(_g7 < labels.length) {
-			var label3 = labels[_g7];
-			++_g7;
-			_g6.push(null);
-		}
-		var haxe4HLCDataset1 = { label : haxe4HLCDataset, backgroundColor : "#a866ff", borderColor : "#3f0090", borderWidth : 1, data : _g6};
-		var data1 = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset1,haxe4HLCDataset1]};
-		var _g8 = 0;
-		var _g9 = latestHaxe3Data.targets;
-		while(_g8 < _g9.length) {
-			var target = _g9[_g8];
-			++_g8;
+		var data1 = { labels : labels, datasets : [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset1]};
+		var _g6 = 0;
+		var _g7 = latestHaxe3Data.targets;
+		while(_g6 < _g7.length) {
+			var target = _g7[_g6];
+			++_g6;
 			var index = data1.labels.indexOf(target.name);
 			if(index < 0) {
 				continue;
@@ -160,11 +151,11 @@ BenchmarkJS.prototype = {
 			}
 			haxe3Dataset.data[index] = target.time;
 		}
-		var _g10 = 0;
-		var _g11 = latestHaxe4Data.targets;
-		while(_g10 < _g11.length) {
-			var target1 = _g11[_g10];
-			++_g10;
+		var _g8 = 0;
+		var _g9 = latestHaxe4Data.targets;
+		while(_g8 < _g9.length) {
+			var target1 = _g9[_g8];
+			++_g8;
 			var index1 = data1.labels.indexOf(target1.name);
 			if(index1 < 0) {
 				continue;
@@ -176,7 +167,7 @@ BenchmarkJS.prototype = {
 			}
 			if(target1.name == "Hashlink") {
 				var time1 = this.getHistoryTime(latestHaxe4Data,"Hashlink/C");
-				haxe4HLCDataset1.data[index1] = data__$TestRun_TimeValue_$Impl_$.fromFloat(time1);
+				haxe4ES6Dataset1.data[index1] = data__$TestRun_TimeValue_$Impl_$.fromFloat(time1);
 			}
 		}
 		var options = { type : "bar", data : data1, options : { responsive : true, animation : { duration : 0}, legend : { position : "top"}, title : { display : true, text : "latest benchmark results"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
@@ -286,11 +277,10 @@ BenchmarkJS.prototype = {
 			var ctx = (js_Boot.__cast(window.document.getElementById(canvasId) , HTMLCanvasElement)).getContext("2d");
 			var chart = new Chart(ctx, options);
 			var _this1 = this.chartObjects;
-			var value = chart;
 			if(__map_reserved[target] != null) {
-				_this1.setReserved(target,value);
+				_this1.setReserved(target,chart);
 			} else {
-				_this1.h[target] = value;
+				_this1.h[target] = chart;
 			}
 			return;
 		}
@@ -1327,66 +1317,6 @@ haxe_http_HttpJs.prototype = $extend(haxe_http_HttpBase.prototype,{
 	}
 	,__class__: haxe_http_HttpJs
 });
-var haxe_remoting_AsyncConnection = function() { };
-haxe_remoting_AsyncConnection.__name__ = true;
-haxe_remoting_AsyncConnection.__isInterface__ = true;
-haxe_remoting_AsyncConnection.prototype = {
-	__class__: haxe_remoting_AsyncConnection
-};
-var haxe_remoting_AsyncDebugConnection = function(path,cnx,data) {
-	this.__path = path;
-	this.__cnx = cnx;
-	this.__data = data;
-};
-haxe_remoting_AsyncDebugConnection.__name__ = true;
-haxe_remoting_AsyncDebugConnection.__interfaces__ = [haxe_remoting_AsyncConnection];
-haxe_remoting_AsyncDebugConnection.create = function(cnx) {
-	var cnx1 = new haxe_remoting_AsyncDebugConnection([],cnx,{ error : function(e) {
-		throw js__$Boot_HaxeError.wrap(e);
-	}, oncall : function(path,params) {
-	}, onerror : null, onresult : null});
-	cnx1.setErrorDebug(function(path1,params1,e1) {
-		console.log("haxe/remoting/AsyncDebugConnection.hx:83:",path1.join(".") + "(" + params1.join(",") + ") = ERROR " + Std.string(e1));
-	});
-	cnx1.setResultDebug(function(path2,params2,e2) {
-		console.log("haxe/remoting/AsyncDebugConnection.hx:84:",path2.join(".") + "(" + params2.join(",") + ") = " + Std.string(e2));
-	});
-	return cnx1;
-};
-haxe_remoting_AsyncDebugConnection.prototype = {
-	resolve: function(name) {
-		var cnx = new haxe_remoting_AsyncDebugConnection(this.__path.slice(),this.__cnx.resolve(name),this.__data);
-		cnx.__path.push(name);
-		return cnx;
-	}
-	,setErrorHandler: function(h) {
-		this.__data.error = h;
-	}
-	,setErrorDebug: function(h) {
-		this.__data.onerror = h;
-	}
-	,setResultDebug: function(h) {
-		this.__data.onresult = h;
-	}
-	,setCallDebug: function(h) {
-		this.__data.oncall = h;
-	}
-	,call: function(params,onResult) {
-		var me = this;
-		this.__data.oncall(this.__path,params);
-		this.__cnx.setErrorHandler(function(e) {
-			me.__data.onerror(me.__path,params,e);
-			me.__data.error(e);
-		});
-		this.__cnx.call(params,function(r) {
-			me.__data.onresult(me.__path,params,r);
-			if(onResult != null) {
-				onResult(r);
-			}
-		});
-	}
-	,__class__: haxe_remoting_AsyncDebugConnection
-};
 var hxjsonast_Error = function(message,pos) {
 	this.message = message;
 	this.pos = pos;
@@ -1768,13 +1698,6 @@ var js__$Boot_HaxeError = function(val) {
 	}
 };
 js__$Boot_HaxeError.__name__ = true;
-js__$Boot_HaxeError.wrap = function(val) {
-	if(((val) instanceof Error)) {
-		return val;
-	} else {
-		return new js__$Boot_HaxeError(val);
-	}
-};
 js__$Boot_HaxeError.__super__ = Error;
 js__$Boot_HaxeError.prototype = $extend(Error.prototype,{
 	__class__: js__$Boot_HaxeError
