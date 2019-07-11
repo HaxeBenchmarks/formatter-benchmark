@@ -16,10 +16,7 @@ matrix:
       install:
       - curl -s -o archive.tar.bz2 https://storage.googleapis.com/travis-ci-language-archives/php/binaries/ubuntu/16.04/x86_64/php-7.3.tar.bz2 && tar xjf archive.tar.bz2 --directory /
       - ~/.phpenv/bin/phpenv global 7.3
-      # - wget https://www.libsdl.org/release/SDL2-devel-2.0.5-VC.zip && unzip SDL2-devel-2.0.5-VC.zip
-      # - wget http://openal-soft.org/openal-binaries/openal-soft-1.17.2-bin.zip && unzip openal-soft-1.17.2-bin.zip
-      # - (git clone https://github.com/HaxeFoundation/hashlink && cd hashlink && git checkout f9ac7acdb2d82661d9d77c1a44972e90cc331b98 && mv ../SDL2-2.0.5 include/sdl && mv ../openal-soft-1.17.2-bin include/openal && sed -i 's/^LIBFLAGS =/LIBFLAGS = -L./' Makefile && sed -i 's/libhl hl libs/libhl hl/' Makefile && make all && cp hl /usr/local/bin/ && sudo ldconfig && hl --version)
-      - (git clone https://github.com/HaxeFoundation/hashlink && cd hashlink && git checkout f9ac7acdb2d82661d9d77c1a44972e90cc331b98 && sed -i 's/^LIBFLAGS =/LIBFLAGS = -L./' Makefile && sed -i 's/libhl hl libs/libhl hl/' Makefile && ARCH=32 make all && sudo cp hl /usr/local/bin/ && sudo cp libhl.so /usr/local/lib && sudo ldconfig && hl || true)
+      - ./compileHL1.sh
       - export HASHLINK_CC_PARAMS="-m32 -I hashlink/src"
       - haxelib git hxparse https://github.com/Simn/hxparse --never
       - (git clone https://github.com/Simn/haxeparser && cd haxeparser && git checkout 48160b190cacafb0003d0c8d085dca2c85e21e31 && haxelib dev haxeparser .)
@@ -27,8 +24,8 @@ matrix:
       - haxelib git hxnodejs https://github.com/HaxeFoundation/hxnodejs --never
       - haxelib git json2object https://github.com/elnabo/json2object
       - haxelib git tokentree https://github.com/HaxeCheckstyle/tokentree.git
+      - haxelib git formatter https://github.com/HaxeCheckstyle/formatter.git
       - haxelib install haxeparser
-      - haxelib install formatter
       - haxelib install hxcpp
       - haxelib install hxjava
       - haxelib install hxcs
@@ -47,7 +44,7 @@ matrix:
       - haxelib git json2object https://github.com/elnabo/json2object
       - (haxelib git hxcpp https://github.com/HaxeFoundation/hxcpp && cd /home/travis/haxe/lib/hxcpp/git/tools/hxcpp && haxe compile.hxml)
       - haxelib git tokentree https://github.com/HaxeCheckstyle/tokentree.git
-      - haxelib install formatter
+      - haxelib git formatter https://github.com/HaxeCheckstyle/formatter.git
       - haxelib install hxjava
       - haxelib install hxcs
       - haxelib install hashlink
