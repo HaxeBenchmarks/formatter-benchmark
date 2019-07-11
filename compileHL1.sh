@@ -10,7 +10,7 @@ git checkout f9ac7acdb2d82661d9d77c1a44972e90cc331b98
 
 sed -i 's/^LIBFLAGS =/LIBFLAGS = -L./' Makefile
 sed -i 's/libhl hl libs/libhl hl/' Makefile
-sed -i 's/varray \*narr = hl_alloc_array(&hlt_bytes,count)/varray \*narr = hl_alloc_array(&hlt_bytes,ncount)/' src/std/sys.c 
+sed -i 's/varray \*narr = hl_alloc_array(&hlt_bytes,count)/varray \*narr = hl_alloc_array(\&hlt_bytes,ncount)/' src/std/sys.c 
 
 ARCH=32 make all 
 
