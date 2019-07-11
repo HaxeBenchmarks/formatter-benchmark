@@ -26,7 +26,7 @@ buildCommon.hxml
 
 buildCommon.hxml
 -hl out/hl/formatter.c
--cmd if [ -f /usr/local/bin/hl ]; then gcc -O3 -o out/hl/formatterCLI -std=c11 -I out/hl out/hl/formatter.c -lhl; fi
+-cmd gcc -O3 -o out/hl/formatterCLI -std=c11 -I out/hl $HASHLINK_CC_PARAMS out/hl/formatter.c -lhl
 
 --next
 
