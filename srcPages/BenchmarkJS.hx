@@ -136,24 +136,16 @@ class BenchmarkJS {
 		};
 
 		var haxe4ES6Dataset = {
-			label: latestHaxe4Data.haxeVersion + " (ES6)",
+			label: latestHaxe4Data.haxeVersion + " (ES6 + HL/C)",
 			backgroundColor: "#66FF66",
 			borderColor: "#00FF00",
 			borderWidth: 1,
 			data: [for (label in labels) null]
 		};
 
-		var haxe4HLCDataset = {
-			label: latestHaxe4Data.haxeVersion + " (HL/C)",
-			backgroundColor: "#a866ff",
-			borderColor: "#3f0090",
-			borderWidth: 1,
-			data: [for (label in labels) null]
-		};
-
 		var data = {
 			labels: labels,
-			datasets: [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset, haxe4HLCDataset]
+			datasets: [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset]
 		};
 		for (target in latestHaxe3Data.targets) {
 			var index:Int = data.labels.indexOf(target.name);
@@ -177,7 +169,7 @@ class BenchmarkJS {
 			}
 			if (target.name == Hashlink) {
 				var time:Null<Float> = getHistoryTime(latestHaxe4Data, HashlinkC);
-				haxe4HLCDataset.data[index] = time;
+				haxe4ES6Dataset.data[index] = time;
 			}
 		}
 
