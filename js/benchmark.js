@@ -16,13 +16,14 @@ var BenchmarkJS = function() {
 	this.averageFactory = function(windowSize) {
 		return new data_SimpleMovingAverage(windowSize);
 	};
-	this.withAverage = true;
+	this.showAverage = ShowAverage.DataAndAverage;
 	this.chartObjects = new haxe_ds_StringMap();
 	this.requestArchivedData();
 	$(window.document).ready(function() {
 		_gthis.documentLoaded = true;
 		_gthis.checkLoaded();
 	});
+	$("#onlyAverage").change($bind(this,this.changeOnlyAverage));
 	$("#average").change($bind(this,this.changeAverage));
 	$("#averageWindow").change($bind(this,this.changeAverageWindow));
 };
@@ -31,22 +32,74 @@ BenchmarkJS.main = function() {
 	new BenchmarkJS();
 };
 BenchmarkJS.prototype = {
-	changeAverage: function(event) {
+	changeOnlyAverage: function(event) {
+		var show = $("#onlyAverage").is(":checked");
+		if(show) {
+			switch(this.showAverage._hx_index) {
+			case 0:
+				this.showAverage = ShowAverage.OnlyAverage;
+				break;
+			case 1:
+				break;
+			case 2:
+				this.showAverage = ShowAverage.OnlyAverage;
+				break;
+			}
+		} else {
+			switch(this.showAverage._hx_index) {
+			case 0:
+				break;
+			case 1:
+				this.showAverage = ShowAverage.DataAndAverage;
+				break;
+			case 2:
+				break;
+			}
+		}
+		this.showData();
+	}
+	,changeAverage: function(event) {
 		switch($("#average").val()) {
 		case "EMA":
-			this.withAverage = true;
+			switch(this.showAverage._hx_index) {
+			case 0:
+				this.showAverage = ShowAverage.DataAndAverage;
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			}
 			this.averageFactory = function(windowSize) {
 				return new data_ExponentialMovingAverage(windowSize);
 			};
 			break;
 		case "SMA":
-			this.withAverage = true;
+			switch(this.showAverage._hx_index) {
+			case 0:
+				this.showAverage = ShowAverage.DataAndAverage;
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			}
 			this.averageFactory = function(windowSize1) {
 				return new data_SimpleMovingAverage(windowSize1);
 			};
 			break;
 		default:
-			this.withAverage = false;
+			switch(this.showAverage._hx_index) {
+			case 0:
+				break;
+			case 1:
+				this.showAverage = ShowAverage.JustData;
+				break;
+			case 2:
+				this.showAverage = ShowAverage.JustData;
+				break;
+			}
+			$("#onlyAverage").prop("checked",false);
 			this.averageFactory = function(windowSize2) {
 				return new data_SimpleMovingAverage(windowSize2);
 			};
@@ -66,7 +119,7 @@ BenchmarkJS.prototype = {
 			_gthis.checkLoaded();
 		};
 		request.onError = function(msg) {
-			console.log("srcPages/BenchmarkJS.hx:73:","failed to download Haxe 3 data: " + msg);
+			console.log("srcPages/BenchmarkJS.hx:112:","failed to download Haxe 3 data: " + msg);
 		};
 		request.request();
 		var request1 = new haxe_http_HttpJs("data/archiveHaxe4.json");
@@ -76,7 +129,7 @@ BenchmarkJS.prototype = {
 			_gthis.checkLoaded();
 		};
 		request1.onError = function(msg1) {
-			console.log("srcPages/BenchmarkJS.hx:85:","failed to download Haxe 4 data: " + msg1);
+			console.log("srcPages/BenchmarkJS.hx:124:","failed to download Haxe 4 data: " + msg1);
 		};
 		request1.request();
 	}
@@ -108,7 +161,7 @@ BenchmarkJS.prototype = {
 	,showLatest: function() {
 		var latestHaxe3Data = this.haxe3Data[this.haxe3Data.length - 1];
 		var latestHaxe4Data = this.haxe4Data[this.haxe4Data.length - 1];
-		var labels = ["C++","C#","Hashlink","Java","JVM","Neko","NodeJS","PHP","Python"];
+		var labels = ["C++","C#","Hashlink","Java","Neko","NodeJS","PHP","Python"];
 		var latestHaxe3Data1 = latestHaxe3Data.haxeVersion;
 		var _g = [];
 		var _g1 = 0;
@@ -127,7 +180,7 @@ BenchmarkJS.prototype = {
 			_g2.push(null);
 		}
 		var haxe4Dataset = { label : latestHaxe4Data1, backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, data : _g2};
-		var haxe4ES6Dataset = latestHaxe4Data.haxeVersion + " (ES6 + HL/C)";
+		var haxe4ES6Dataset = latestHaxe4Data.haxeVersion + " (ES6 + HL/C + JVM)";
 		var _g4 = [];
 		var _g5 = 0;
 		while(_g5 < labels.length) {
@@ -169,6 +222,10 @@ BenchmarkJS.prototype = {
 				var time1 = this.getHistoryTime(latestHaxe4Data,"Hashlink/C");
 				haxe4ES6Dataset1.data[index1] = data__$TestRun_TimeValue_$Impl_$.fromFloat(time1);
 			}
+			if(target1.name == "Java") {
+				var time2 = this.getHistoryTime(latestHaxe4Data,"JVM");
+				haxe4ES6Dataset1.data[index1] = data__$TestRun_TimeValue_$Impl_$.fromFloat(time2);
+			}
 		}
 		var options = { type : "bar", data : data1, options : { responsive : true, animation : { duration : 0}, legend : { position : "top"}, title : { display : true, text : "latest benchmark results"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "runtime in seconds"}}]}}};
 		var _this = this.chartObjects;
@@ -196,30 +253,50 @@ BenchmarkJS.prototype = {
 		var haxe4ES6Dataset = { label : target + " (Haxe 4 (ES6))", backgroundColor : "#66FF66", borderColor : "#00FF00", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var haxe4ES6SMADataset = { label : target + " (Haxe 4 (ES6) avg)", backgroundColor : "#CCFFCC", borderColor : "#CCFFCC", borderWidth : 1, fill : false, spanGaps : true, data : []};
 		var data1 = { labels : [], datasets : []};
-		if(this.withAverage) {
-			data1.datasets = [haxe3Dataset,haxe3SMADataset,haxe4Dataset,haxe4SMADataset];
-		} else {
+		switch(this.showAverage._hx_index) {
+		case 0:
 			data1.datasets = [haxe3Dataset,haxe4Dataset];
+			break;
+		case 1:
+			data1.datasets = [haxe3SMADataset,haxe4SMADataset];
+			break;
+		case 2:
+			data1.datasets = [haxe3Dataset,haxe3SMADataset,haxe4Dataset,haxe4SMADataset];
+			break;
 		}
 		if(target == "JVM") {
-			data1.datasets = [haxe4Dataset];
-			if(this.withAverage) {
-				data1.datasets.push(haxe4SMADataset);
+			switch(this.showAverage._hx_index) {
+			case 0:
+				data1.datasets = [haxe4Dataset];
+				break;
+			case 1:
+				data1.datasets = [haxe4SMADataset];
+				break;
+			case 2:
+				data1.datasets = [haxe4Dataset,haxe4SMADataset];
+				break;
 			}
 		}
 		if(target == "NodeJS") {
-			data1.datasets.push(haxe4ES6Dataset);
-			if(this.withAverage) {
-				data1.datasets.push(haxe4ES6SMADataset);
+			switch(this.showAverage._hx_index) {
+			case 0:
+				data1.datasets = [haxe3Dataset,haxe4Dataset,haxe4ES6Dataset];
+				break;
+			case 1:
+				data1.datasets = [haxe3SMADataset,haxe4SMADataset,haxe4ES6SMADataset];
+				break;
+			case 2:
+				data1.datasets = [haxe3Dataset,haxe3SMADataset,haxe4Dataset,haxe4SMADataset,haxe4ES6Dataset,haxe4ES6SMADataset];
+				break;
 			}
 		}
 		var datasetData = [];
 		var average = this.averageFactory(this.windowSize);
-		var _g = 0;
-		var _g1 = this.haxe3Data;
-		while(_g < _g1.length) {
-			var run = _g1[_g];
-			++_g;
+		var _g1 = 0;
+		var _g2 = this.haxe3Data;
+		while(_g1 < _g2.length) {
+			var run = _g2[_g1];
+			++_g1;
 			var time = this.getHistoryTime(run,target);
 			if(time == null) {
 				continue;
@@ -229,11 +306,11 @@ BenchmarkJS.prototype = {
 		}
 		var average1 = this.averageFactory(this.windowSize);
 		var average2 = this.averageFactory(this.windowSize);
-		var _g2 = 0;
-		var _g3 = this.haxe4Data;
-		while(_g2 < _g3.length) {
-			var run1 = _g3[_g2];
-			++_g2;
+		var _g3 = 0;
+		var _g4 = this.haxe4Data;
+		while(_g3 < _g4.length) {
+			var run1 = _g4[_g3];
+			++_g3;
 			var time1 = this.getHistoryTime(run1,target);
 			if(time1 == null) {
 				continue;
@@ -247,10 +324,10 @@ BenchmarkJS.prototype = {
 			datasetData.push({ time : data__$TestRun_TimeValue_$Impl_$.fromFloat(time1), sma : average1.getAverage(), time2 : data__$TestRun_TimeValue_$Impl_$.fromFloat(time2), sma2 : average2.getAverage(), date : run1.date, dataset : data_Dataset.Haxe4});
 		}
 		datasetData.sort($bind(this,this.sortDate));
-		var _g4 = 0;
-		while(_g4 < datasetData.length) {
-			var item = datasetData[_g4];
-			++_g4;
+		var _g5 = 0;
+		while(_g5 < datasetData.length) {
+			var item = datasetData[_g5];
+			++_g5;
 			data1.labels.push(item.date);
 			switch(item.dataset._hx_index) {
 			case 0:
@@ -311,6 +388,11 @@ BenchmarkJS.prototype = {
 		return null;
 	}
 	,__class__: BenchmarkJS
+};
+var ShowAverage = $hxEnums["ShowAverage"] = { __ename__ : true, __constructs__ : ["JustData","OnlyAverage","DataAndAverage"]
+	,JustData: {_hx_index:0,__enum__:"ShowAverage",toString:$estr}
+	,OnlyAverage: {_hx_index:1,__enum__:"ShowAverage",toString:$estr}
+	,DataAndAverage: {_hx_index:2,__enum__:"ShowAverage",toString:$estr}
 };
 var EReg = function(r,opt) {
 	this.r = new RegExp(r,opt.split("u").join(""));
