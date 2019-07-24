@@ -17,7 +17,7 @@ class BenchmarkJS {
 	var documentLoaded:Bool;
 	var windowSize:Int;
 	var averageFactory:(windowSize:Int) -> IMovingAverage;
-	var withAverage:Bool;
+	var showAverage:ShowAverage;
 	var chartObjects:Map<String, Any>;
 
 	public static function main() {
@@ -30,27 +30,66 @@ class BenchmarkJS {
 		documentLoaded = false;
 		windowSize = 6;
 		averageFactory = SimpleMovingAverage.new;
-		withAverage = true;
+		showAverage = DataAndAverage;
 		chartObjects = new Map<String, Any>();
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
 			documentLoaded = true;
 			checkLoaded();
 		});
+		new JQuery("#onlyAverage").change(changeOnlyAverage);
 		new JQuery("#average").change(changeAverage);
 		new JQuery("#averageWindow").change(changeAverageWindow);
+	}
+
+	function changeOnlyAverage(event:Event) {
+		var show:Bool = new JQuery("#onlyAverage").is(":checked");
+		if (show) {
+			switch (showAverage) {
+				case JustData:
+					showAverage = OnlyAverage;
+				case OnlyAverage:
+				case DataAndAverage:
+					showAverage = OnlyAverage;
+			}
+		} else {
+			switch (showAverage) {
+				case JustData:
+				case OnlyAverage:
+					showAverage = DataAndAverage;
+				case DataAndAverage:
+			}
+		}
+		showData();
 	}
 
 	function changeAverage(event:Event) {
 		switch (new JQuery("#average").val()) {
 			case "SMA":
-				withAverage = true;
+				switch (showAverage) {
+					case JustData:
+						showAverage = DataAndAverage;
+					case OnlyAverage:
+					case DataAndAverage:
+				}
 				averageFactory = SimpleMovingAverage.new;
 			case "EMA":
-				withAverage = true;
+				switch (showAverage) {
+					case JustData:
+						showAverage = DataAndAverage;
+					case OnlyAverage:
+					case DataAndAverage:
+				}
 				averageFactory = ExponentialMovingAverage.new;
 			default:
-				withAverage = false;
+				switch (showAverage) {
+					case JustData:
+					case OnlyAverage:
+						showAverage = JustData;
+					case DataAndAverage:
+						showAverage = JustData;
+				}
+				new JQuery("#onlyAverage").prop("checked", false);
 				averageFactory = SimpleMovingAverage.new;
 		}
 		showData();
@@ -117,7 +156,7 @@ class BenchmarkJS {
 	function showLatest() {
 		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
-		var labels:Array<String> = [Cpp, Csharp, Hashlink, Java, Jvm, Neko, NodeJs, Php, Python];
+		var labels:Array<String> = [Cpp, Csharp, Hashlink, Java, Neko, NodeJs, Php, Python];
 
 		var haxe3Dataset = {
 			label: latestHaxe3Data.haxeVersion,
@@ -136,7 +175,7 @@ class BenchmarkJS {
 		};
 
 		var haxe4ES6Dataset = {
-			label: latestHaxe4Data.haxeVersion + " (ES6 + HL/C)",
+			label: latestHaxe4Data.haxeVersion + " (ES6 + HL/C + JVM)",
 			backgroundColor: "#66FF66",
 			borderColor: "#00FF00",
 			borderWidth: 1,
@@ -169,6 +208,10 @@ class BenchmarkJS {
 			}
 			if (target.name == Hashlink) {
 				var time:Null<Float> = getHistoryTime(latestHaxe4Data, HashlinkC);
+				haxe4ES6Dataset.data[index] = time;
+			}
+			if (target.name == Java) {
+				var time:Null<Float> = getHistoryTime(latestHaxe4Data, Jvm);
 				haxe4ES6Dataset.data[index] = time;
 			}
 		}
@@ -280,21 +323,39 @@ class BenchmarkJS {
 			labels: [],
 			datasets: []
 		};
-		if (withAverage) {
-			data.datasets = [haxe3Dataset, haxe3SMADataset, haxe4Dataset, haxe4SMADataset];
-		} else {
-			data.datasets = [haxe3Dataset, haxe4Dataset];
+		switch (showAverage) {
+			case JustData:
+				data.datasets = [haxe3Dataset, haxe4Dataset];
+			case OnlyAverage:
+				data.datasets = [haxe3SMADataset, haxe4SMADataset];
+			case DataAndAverage:
+				data.datasets = [haxe3Dataset, haxe3SMADataset, haxe4Dataset, haxe4SMADataset];
 		}
 		if (target == Jvm) {
-			data.datasets = [haxe4Dataset];
-			if (withAverage) {
-				data.datasets.push(haxe4SMADataset);
+			switch (showAverage) {
+				case JustData:
+					data.datasets = [haxe4Dataset];
+				case OnlyAverage:
+					data.datasets = [haxe4SMADataset];
+				case DataAndAverage:
+					data.datasets = [haxe4Dataset, haxe4SMADataset];
 			}
 		}
 		if (target == NodeJs) {
-			data.datasets.push(haxe4ES6Dataset);
-			if (withAverage) {
-				data.datasets.push(haxe4ES6SMADataset);
+			switch (showAverage) {
+				case JustData:
+					data.datasets = [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset];
+				case OnlyAverage:
+					data.datasets = [haxe3SMADataset, haxe4SMADataset, haxe4ES6SMADataset];
+				case DataAndAverage:
+					data.datasets = [
+						haxe3Dataset,
+						haxe3SMADataset,
+						haxe4Dataset,
+						haxe4SMADataset,
+						haxe4ES6Dataset,
+						haxe4ES6SMADataset
+					];
 			}
 		}
 
@@ -444,4 +505,10 @@ typedef HistoricalDataPoint = {
 	var ?sma2:TimeValue;
 	var date:String;
 	var dataset:Dataset;
+}
+
+enum ShowAverage {
+	JustData;
+	OnlyAverage;
+	DataAndAverage;
 }
