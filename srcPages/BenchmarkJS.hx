@@ -141,6 +141,7 @@ class BenchmarkJS {
 
 	function showData() {
 		showLatest();
+		showLinesOfCode();
 		showHistory(Cpp, "cppBenchmarks");
 		showHistory(Java, "javaBenchmarks");
 		showHistory(Jvm, "jvmBenchmarks");
@@ -258,6 +259,88 @@ class BenchmarkJS {
 			return;
 		}
 		var chart:Any = chartObjects.get("latest");
+		untyped chart.data = data;
+		Syntax.code("{0}.update()", chart);
+	}
+
+	function showLinesOfCode() {
+		var inputDataset = {
+			label: "Input lines",
+			backgroundColor: "#FF6666",
+			borderColor: "#FF0000",
+			borderWidth: 1,
+			fill: false,
+			spanGaps: true,
+			data: []
+		};
+
+		var outputDataset = {
+			label: "Formatted lines",
+			backgroundColor: "#6666FF",
+			borderColor: "#0000FF",
+			borderWidth: 1,
+			fill: false,
+			spanGaps: true,
+			data: []
+		};
+
+		var data = {
+			labels: [],
+			datasets: [inputDataset, outputDataset]
+		};
+
+		for (run in haxe4Data) {
+			for (runTarget in run.targets) {
+				if (runTarget.name != NodeJs) {
+					continue;
+				}
+				data.labels.push(run.date);
+				inputDataset.data.push(runTarget.inputLines);
+				outputDataset.data.push(runTarget.outputLines);
+			}
+		}
+		var options = {
+			type: "line",
+			data: data,
+			options: {
+				responsive: true,
+				animation: {
+					duration: 0
+				},
+				legend: {
+					position: "top",
+				},
+				title: {
+					display: true,
+					text: 'LInes of Code'
+				},
+				tooltips: {
+					mode: "index",
+					intersect: false
+				},
+				hover: {
+					mode: "nearest",
+					intersect: true
+				},
+				scales: {
+					yAxes: [
+						{
+							scaleLabel: {
+								display: true,
+								labelString: "lines of code"
+							}
+						}
+					]
+				}
+			}
+		};
+		if (!chartObjects.exists("linesOfCode")) {
+			var ctx:CanvasRenderingContext2D = cast(Browser.document.getElementById("linesOfCode"), CanvasElement).getContext("2d");
+			var chart:Any = Syntax.code("new Chart({0}, {1})", ctx, options);
+			chartObjects.set("linesOfCode", chart);
+			return;
+		}
+		var chart:Any = chartObjects.get("linesOfCode");
 		untyped chart.data = data;
 		Syntax.code("{0}.update()", chart);
 	}
