@@ -147,6 +147,7 @@ BenchmarkJS.prototype = {
 	}
 	,showData: function() {
 		this.showLatest();
+		this.showLinesOfCode();
 		this.showHistory("C++","cppBenchmarks");
 		this.showHistory("Java","javaBenchmarks");
 		this.showHistory("JVM","jvmBenchmarks");
@@ -243,6 +244,46 @@ BenchmarkJS.prototype = {
 		var _this2 = this.chartObjects;
 		var chart1 = __map_reserved["latest"] != null ? _this2.getReserved("latest") : _this2.h["latest"];
 		chart1.data = data1;
+		chart1.update();
+	}
+	,showLinesOfCode: function() {
+		var inputDataset = { label : "Input lines", backgroundColor : "#FF6666", borderColor : "#FF0000", borderWidth : 1, fill : false, spanGaps : true, data : []};
+		var outputDataset = { label : "Formatted lines", backgroundColor : "#6666FF", borderColor : "#0000FF", borderWidth : 1, fill : false, spanGaps : true, data : []};
+		var data = { labels : [], datasets : [inputDataset,outputDataset]};
+		var _g = 0;
+		var _g1 = this.haxe4Data;
+		while(_g < _g1.length) {
+			var run = _g1[_g];
+			++_g;
+			var _g2 = 0;
+			var _g11 = run.targets;
+			while(_g2 < _g11.length) {
+				var runTarget = _g11[_g2];
+				++_g2;
+				if(runTarget.name != "NodeJS") {
+					continue;
+				}
+				data.labels.push(run.date);
+				inputDataset.data.push(runTarget.inputLines);
+				outputDataset.data.push(runTarget.outputLines);
+			}
+		}
+		var options = { type : "line", data : data, options : { responsive : true, animation : { duration : 0}, legend : { position : "top"}, title : { display : true, text : "LInes of Code"}, tooltips : { mode : "index", intersect : false}, hover : { mode : "nearest", intersect : true}, scales : { yAxes : [{ scaleLabel : { display : true, labelString : "lines of code"}}]}}};
+		var _this = this.chartObjects;
+		if(!(__map_reserved["linesOfCode"] != null ? _this.existsReserved("linesOfCode") : _this.h.hasOwnProperty("linesOfCode"))) {
+			var ctx = (js_Boot.__cast(window.document.getElementById("linesOfCode") , HTMLCanvasElement)).getContext("2d");
+			var chart = new Chart(ctx, options);
+			var _this1 = this.chartObjects;
+			if(__map_reserved["linesOfCode"] != null) {
+				_this1.setReserved("linesOfCode",chart);
+			} else {
+				_this1.h["linesOfCode"] = chart;
+			}
+			return;
+		}
+		var _this2 = this.chartObjects;
+		var chart1 = __map_reserved["linesOfCode"] != null ? _this2.getReserved("linesOfCode") : _this2.h["linesOfCode"];
+		chart1.data = data;
 		chart1.update();
 	}
 	,showHistory: function(target,canvasId) {
@@ -1823,17 +1864,25 @@ js_Boot.__string_rec = function(o,s) {
 			var n = e.__constructs__[o._hx_index];
 			var con = e[n];
 			if(con.__params__) {
-				s += "\t";
-				var tmp = n + "(";
-				var _g = [];
-				var _g1 = 0;
-				var _g2 = con.__params__;
-				while(_g1 < _g2.length) {
-					var p = _g2[_g1];
-					++_g1;
-					_g.push(js_Boot.__string_rec(o[p],s));
-				}
-				return tmp + _g.join(",") + ")";
+				s = s + "\t";
+				return n + "(" + ((function($this) {
+					var $r;
+					var _g = [];
+					{
+						var _g1 = 0;
+						var _g2 = con.__params__;
+						while(true) {
+							if(!(_g1 < _g2.length)) {
+								break;
+							}
+							var p = _g2[_g1];
+							_g1 = _g1 + 1;
+							_g.push(js_Boot.__string_rec(o[p],s));
+						}
+					}
+					$r = _g;
+					return $r;
+				}(this))).join(",") + ")";
 			} else {
 				return n;
 			}
@@ -1951,11 +2000,7 @@ js_Boot.__instanceof = function(o,cl) {
 		if(cl == Enum ? o.__ename__ != null : false) {
 			return true;
 		}
-		if(o.__enum__ != null) {
-			return $hxEnums[o.__enum__] == cl;
-		} else {
-			return false;
-		}
+		return o.__enum__ != null ? $hxEnums[o.__enum__] == cl : false;
 	}
 };
 js_Boot.__downcastCheck = function(o,cl) {
