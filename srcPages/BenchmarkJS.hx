@@ -18,6 +18,7 @@ class BenchmarkJS {
 	var windowSize:Int;
 	var averageFactory:(windowSize:Int) -> IMovingAverage;
 	var showAverage:ShowAverage;
+	var withHaxe3:Bool;
 	var chartObjects:Map<String, Any>;
 
 	public static function main() {
@@ -31,6 +32,7 @@ class BenchmarkJS {
 		windowSize = 6;
 		averageFactory = SimpleMovingAverage.new;
 		showAverage = DataAndAverage;
+		withHaxe3 = true;
 		chartObjects = new Map<String, Any>();
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
@@ -40,6 +42,7 @@ class BenchmarkJS {
 		new JQuery("#onlyAverage").change(changeOnlyAverage);
 		new JQuery("#average").change(changeAverage);
 		new JQuery("#averageWindow").change(changeAverageWindow);
+		new JQuery("#withHaxe3").change(changeWithHaxe3);
 	}
 
 	function changeOnlyAverage(event:Event) {
@@ -60,6 +63,11 @@ class BenchmarkJS {
 				case DataAndAverage:
 			}
 		}
+		showData();
+	}
+
+	function changeWithHaxe3(event:Event) {
+		withHaxe3 = new JQuery("#withHaxe3").is(":checked");
 		showData();
 	}
 
@@ -408,11 +416,23 @@ class BenchmarkJS {
 		};
 		switch (showAverage) {
 			case JustData:
-				data.datasets = [haxe3Dataset, haxe4Dataset];
+				if (withHaxe3) {
+					data.datasets = [haxe3Dataset, haxe4Dataset];
+				} else {
+					data.datasets = [haxe4Dataset];
+				}
 			case OnlyAverage:
-				data.datasets = [haxe3SMADataset, haxe4SMADataset];
+				if (withHaxe3) {
+					data.datasets = [haxe3SMADataset, haxe4SMADataset];
+				} else {
+					data.datasets = [haxe4SMADataset];
+				}
 			case DataAndAverage:
-				data.datasets = [haxe3Dataset, haxe3SMADataset, haxe4Dataset, haxe4SMADataset];
+				if (withHaxe3) {
+					data.datasets = [haxe3Dataset, haxe3SMADataset, haxe4Dataset, haxe4SMADataset];
+				} else {
+					data.datasets = [haxe4Dataset, haxe4SMADataset];
+				}
 		}
 		if (target == Jvm) {
 			switch (showAverage) {
@@ -427,35 +447,49 @@ class BenchmarkJS {
 		if (target == NodeJs) {
 			switch (showAverage) {
 				case JustData:
-					data.datasets = [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset];
+					if (withHaxe3) {
+						data.datasets = [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset];
+					} else {
+						data.datasets = [haxe4Dataset, haxe4ES6Dataset];
+					}
 				case OnlyAverage:
-					data.datasets = [haxe3SMADataset, haxe4SMADataset, haxe4ES6SMADataset];
+					if (withHaxe3) {
+						data.datasets = [haxe3SMADataset, haxe4SMADataset, haxe4ES6SMADataset];
+					} else {
+						data.datasets = [haxe4SMADataset, haxe4ES6SMADataset];
+					}
 				case DataAndAverage:
-					data.datasets = [
-						haxe3Dataset,
-						haxe3SMADataset,
-						haxe4Dataset,
-						haxe4SMADataset,
-						haxe4ES6Dataset,
-						haxe4ES6SMADataset
-					];
+					if (withHaxe3) {
+						data.datasets = [
+							haxe3Dataset,
+							haxe3SMADataset,
+							haxe4Dataset,
+							haxe4SMADataset,
+							haxe4ES6Dataset,
+							haxe4ES6SMADataset
+						];
+					} else {
+						data.datasets = [haxe4Dataset, haxe4SMADataset, haxe4ES6Dataset, haxe4ES6SMADataset];
+					}
 			}
 		}
 
 		var datasetData:Array<HistoricalDataPoint> = [];
 		var average:IMovingAverage = averageFactory(windowSize);
-		for (run in haxe3Data) {
-			var time:Null<Float> = getHistoryTime(run, target);
-			if (time == null) {
-				continue;
+		if (withHaxe3) {
+			for (run in haxe3Data) {
+				var time:Null<Float> = getHistoryTime(run, target);
+				if (time == null) {
+					continue;
+				}
+				average.addValue(time);
+				datasetData.push({
+					time: time,
+					sma: average.getAverage(),
+					date: run.date,
+					dataset: Haxe3
+				});
 			}
-			average.addValue(time);
-			datasetData.push({
-				time: time,
-				sma: average.getAverage(),
-				date: run.date,
-				dataset: Haxe3
-			});
 		}
 		var average:IMovingAverage = averageFactory(windowSize);
 		var average2:IMovingAverage = averageFactory(windowSize);
@@ -491,8 +525,10 @@ class BenchmarkJS {
 					haxe4ES6Dataset.data.push(null);
 					haxe4ES6SMADataset.data.push(null);
 				case Haxe4:
-					haxe3Dataset.data.push(null);
-					haxe3SMADataset.data.push(null);
+					if (withHaxe3) {
+						haxe3Dataset.data.push(null);
+						haxe3SMADataset.data.push(null);
+					}
 					haxe4Dataset.data.push(item.time);
 					haxe4SMADataset.data.push(item.sma);
 					haxe4ES6Dataset.data.push(item.time2);
