@@ -1,2 +1,2 @@
-buildCommon.hxml
+build/common.hxml
 -neko out/formatter.n
