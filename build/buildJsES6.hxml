@@ -1,0 +1,4 @@
+buildCommon.hxml
+-lib hxnodejs
+-D js-es=6
+-js out/formatter.es6.js
