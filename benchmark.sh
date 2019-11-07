@@ -18,7 +18,7 @@ java -jar out/java/Cli.jar $DATA
 resetGit
 java -jar out/jvm/Cli.jar $DATA
 resetGit
-/usr/local/bin/hl out/formatter.hl $DATA
+hl out/formatter.hl $DATA
 resetGit
 ./out/hl/formatterCLI $DATA
 resetGit
