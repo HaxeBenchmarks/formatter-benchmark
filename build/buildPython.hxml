@@ -1,2 +1,2 @@
-buildCommon.hxml
+build/common.hxml
 -python out/formatter.py
