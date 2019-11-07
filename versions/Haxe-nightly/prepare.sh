@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/bash -e
 
 cd "$( dirname "${BASH_SOURCE[0]}" )"
+ln -sfn ../../benchmark.sh .
 ln -sfn ../../build 
-ln -sfn ../../haxe_libraries/ haxe_libraries
 ln -sfn ../../buildAll.hxml .
+ln -sfn ../../data
+ln -sfn ../../haxe_libraries/ haxe_libraries
 ln -sfn ../../haxelib.json .
 ln -sfn ../../src
 lix download haxe nightly
