@@ -1,4 +1,5 @@
 import haxe.Timer;
+import haxe.macro.Compiler;
 
 /**
 	helper class to build everything, avoids `--next`
@@ -31,7 +32,12 @@ class Build {
 	**/
 	public static function callLix(buildFile:String, title:String) {
 		var startTime = Timer.stamp();
-		Sys.command("npx", ["haxe", buildFile]);
-		Sys.println('building $title (${Timer.stamp() - startTime})');
+		var exitCode:Int = Sys.command("npx", ["haxe", buildFile]);
+		var exitText:String = "";
+		if (exitCode != 0) {
+			exitText = ' - exitCode: $exitCode';
+		}
+
+		Sys.println('[${Compiler.getDefine("haxe_ver")}] building $title (${Timer.stamp() - startTime})$exitText');
 	}
 }

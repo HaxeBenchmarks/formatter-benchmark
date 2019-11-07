@@ -7,3 +7,4 @@ versions/Haxe-*/build
 versions/Haxe-*/src
 versions/Haxe-*/haxe_libraries
 versions/Haxe-*/buildAll.hxml
+versions/Haxe-*/haxelib.json
