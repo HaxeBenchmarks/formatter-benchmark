@@ -1,0 +1,3 @@
+buildCommon.hxml
+-D jvm
+-java out/jvm
