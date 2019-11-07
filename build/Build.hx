@@ -17,6 +17,7 @@ class Build {
 		callLix("build/buildJs.hxml", "JS/ES5");
 		callLix("build/buildJsES6.hxml", "JS/ES6");
 		callLix("build/buildNeko.hxml", "Neko");
+		callLix("build/buildPython.hxml", "PHP7");
 		callLix("build/buildPython.hxml", "Python");
 	}
 
