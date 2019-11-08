@@ -1,3 +1,3 @@
 #!/bin/bash
 
-for folder in versions/*; do (cd $folder; haxe buildAll.hxml); done
+for folder in versions/*; do (cd $folder; ./build.sh); done
