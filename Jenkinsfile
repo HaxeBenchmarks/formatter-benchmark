@@ -9,19 +9,36 @@ pipeline {
     }
 
     stages {
-        stage('Prepare run') {
+        stage('Prepare Testdata') {
             steps {
-                echo 'empty'
+                echo 'Prepare results folders'
+                sh '''
+                mkdir -p results/Haxe-3.4.7
+                mkdir -p results/Haxe-4.0.1
+                mkdir -p results/Haxe-nightly
+                '''
+
+                echo "Download / update test data (Haxe stdlib, OpenFl and Lime sources)"
+                sh '''
+                cd data
+                if [ ! -d haxe ]; then
+                    git clone --depth 1 https://github.com/HaxeFoundation/haxe
+                fi
+                if [ ! -d openfl ]; then
+                    git clone --depth 1 https://github.com/openfl/openfl
+                fi
+                if [ ! -d lime ]; then
+                    git clone --depth 1 https://github.com/openfl/lime
+                fi
+                '''
             }
         }
-        stage('Haxe 3.4.7') {
-            environment { 
-                VERSION_FOLDER = 'versions/Haxe-3.4.7'
-            }
+
+        stage('Prepare build folders') {
             steps {
-                echo 'Preparing'
+                echo 'Preparing build folders for Haxe 3.4.7'
                 sh '''
-                cd $VERSION_FOLDER
+                cd versions/Haxe-3.4.7
                 ln -sfn ../../benchmark.sh . 
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
@@ -34,42 +51,9 @@ pipeline {
                 ln -sfn ../../srcPages 
                 '''
 
-                echo 'update lix dependencies'
+                echo 'Preparing build folders for Haxe 4.0.1'
                 sh '''
-                cd $VERSION_FOLDER
-                lix download 
-                lix install haxelib:hxcpp 
-                '''
-
-                echo 'Build targets'
-                sh '''
-                cd $VERSION_FOLDER
-                haxe buildAll.hxml
-                '''
-
-                echo 'Run benchmark'
-                sh '''
-                cd $VERSION_FOLDER
-                readonly VER=`haxe -version`
-                echo "Running Haxe $VER benchmark"
-                ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src | tee results.csv
-                '''
-
-                echo 'Convert data'
-                sh '''
-                cd $VERSION_FOLDER
-                haxe buildConvertCsv.hxml
-                '''
-            }
-        }
-        stage('Haxe 4.0.1') {
-            environment { 
-                VERSION_FOLDER = 'versions/Haxe-4.0.1'
-            }
-            steps {
-                echo 'Preparing'
-                sh '''
-                cd $VERSION_FOLDER
+                cd versions/Haxe-4.0.1
                 ln -sfn ../../benchmark.sh . 
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
@@ -82,42 +66,9 @@ pipeline {
                 ln -sfn ../../srcPages 
                 '''
 
-                echo 'update lix dependencies'
+                echo 'Preparing build folders for Haxe 4.0.1'
                 sh '''
-                cd $VERSION_FOLDER
-                lix download 
-                lix install haxelib:hxcpp 
-                '''
-
-                echo 'Build targets'
-                sh '''
-                cd $VERSION_FOLDER
-                haxe buildAll.hxml
-                '''
-
-                echo 'Run benchmark'
-                sh '''
-                cd $VERSION_FOLDER
-                readonly VER=`haxe -version`
-                echo "Running Haxe $VER benchmark"
-                ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src | tee results.csv
-                '''
-
-                echo 'Convert data'
-                sh '''
-                cd $VERSION_FOLDER
-                haxe buildConvertCsv.hxml
-                '''
-            }
-        }
-        stage('Haxe nightly') {
-            environment { 
-                VERSION_FOLDER = 'versions/Haxe-nightly'
-            }
-            steps {
-                echo 'Preparing'
-                sh '''
-                cd $VERSION_FOLDER
+                cd versions/Haxe-nightly
                 ln -sfn ../../benchmark.sh . 
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
@@ -129,33 +80,127 @@ pipeline {
                 ln -sfn ../../src 
                 ln -sfn ../../srcPages 
                 '''
+            }
+        }
 
-                echo 'update lix dependencies'
+        stage('Update lix dependencies') {
+            steps {
+                echo 'Update lix dependencies for Haxe 3.4.7'
                 sh '''
-                cd $VERSION_FOLDER
+                cd versions/Haxe-3.4.7
+                lix download 
+                lix install haxelib:hxcpp 
+                '''
+
+                echo 'Update lix dependencies for Haxe 4.0.1'
+                sh '''
+                cd versions/Haxe-4.0.1
+                lix download 
+                lix install haxelib:hxcpp 
+                '''
+
+                echo 'Update lix dependencies for Haxe nightly'
+                sh '''
+                cd versions/Haxe-nightly
                 lix download haxe nightly
                 lix use haxe nightly
                 lix download
                 lix install haxelib:hxcpp
                 '''
+            }
+        }
 
-                echo 'Build targets'
+        stage('Build Haxe 3.4.7') {
+            steps {
+                echo 'Build targets for Haxe 3.4.7'
                 sh '''
-                cd $VERSION_FOLDER
+                cd versions/Haxe-3.4.7
                 haxe buildAll.hxml
                 '''
+            }
+        }
 
-                echo 'Run benchmark'
+        stage('Build Haxe 4.0.1') {
+            steps {
+                echo 'Build targets for Haxe 4.0.1'
                 sh '''
-                cd $VERSION_FOLDER
+                cd versions/Haxe-4.0.1
+                haxe buildAll.hxml
+                '''
+            }
+        }
+
+        stage('Build Haxe nightly') {
+            steps {
+                echo 'Build targets for Haxe nightly'
+                sh '''
+                cd versions/Haxe-nightly
+                haxe buildAll.hxml
+                '''
+            }
+        }
+
+        stage('Run Haxe 3.4.7 benchmarks') {
+            steps {
+                echo 'Run benchmarks for Haxe 3.4.7'
+                sh '''
+                cd versions/Haxe-3.4.7
                 readonly VER=`haxe -version`
                 echo "Running Haxe $VER benchmark"
                 ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src | tee results.csv
                 '''
+            }
+        }
 
-                echo 'Convert data'
+        stage('Run Haxe 4.0.1 benchmarks') {
+            steps {
+                echo 'Run benchmarks for Haxe 4.0.1'
                 sh '''
-                cd $VERSION_FOLDER
+                cd versions/Haxe-4.0.1
+                readonly VER=`haxe -version`
+                echo "Running Haxe $VER benchmark"
+                ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src | tee results.csv
+                '''
+            }
+        }
+
+        stage('Run Haxe nightly benchmarks') {
+            steps {
+                echo 'Run benchmarks for Haxe nightly'
+                sh '''
+                cd versions/Haxe-nightly
+                readonly VER=`haxe -version`
+                echo "Running Haxe $VER benchmark"
+                ./benchmark.sh -s data/haxe/std -s data/openfl/src -s data/lime/src | tee results.csv
+                '''
+            }
+        }
+
+        stage('Convert results for Haxe 3.4.7') {
+            steps {
+                echo 'Convert results for Haxe 3.4.7'
+                sh '''
+                cd versions/Haxe-3.4.7
+                haxe buildConvertCsv.hxml
+                '''
+            }
+        }
+
+        stage('Convert results for Haxe 4.0.1') {
+            steps {
+                echo 'Convert results for Haxe 4.0.1'
+                sh '''
+                cd versions/Haxe-4.0.1
+                haxe buildConvertCsv.hxml
+                '''
+            }
+        }
+
+        stage('Convert results for Haxe nightly') {
+            steps {
+                echo 'Convert results for Haxe nightly'
+                sh '''
+                cd versions/Haxe-nightly
                 haxe buildConvertCsv.hxml
                 '''
             }
