@@ -20,6 +20,7 @@ pipeline {
 
                 echo "Download / update test data (Haxe stdlib, OpenFl and Lime sources)"
                 sh '''
+                mkdir -p data
                 cd data
                 if [ ! -d haxe ]; then
                     git clone --depth 1 https://github.com/HaxeFoundation/haxe
