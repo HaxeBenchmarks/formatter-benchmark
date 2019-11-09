@@ -68,7 +68,7 @@ class BenchmarkStatMacro {
 			return "Python";
 		}
 
-		return "unknown";
+		return "eval";
 	}
 	#end
 }

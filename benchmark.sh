@@ -24,6 +24,8 @@ resetGit
 resetGit
 mono out/cs/bin/Cli.exe $DATA
 resetGit
+haxe build/common.hxml --run formatter.Cli $DATA
+resetGit
 php out/php/index.php $DATA
 resetGit
 neko out/formatter.n $DATA

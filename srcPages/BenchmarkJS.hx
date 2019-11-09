@@ -158,6 +158,7 @@ class BenchmarkJS {
 		showHistory(Csharp, "csharpBenchmarks");
 		showHistory(NodeJs, "nodeBenchmarks");
 		showHistory(Neko, "nekoBenchmarks");
+		showHistory(Eval, "evalBenchmarks");
 		showHistory(Php, "phpBenchmarks");
 		showHistory(Python, "pythonBenchmarks");
 	}
@@ -165,7 +166,7 @@ class BenchmarkJS {
 	function showLatest() {
 		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
-		var labels:Array<String> = [Cpp, Csharp, Hashlink, Java, Neko, NodeJs, Php, Python];
+		var labels:Array<String> = [Cpp, Csharp, Hashlink, Java, Neko, NodeJs, Eval, Php, Python];
 
 		var haxe3Dataset = {
 			label: latestHaxe3Data.haxeVersion,
@@ -615,6 +616,7 @@ abstract Target(String) to String {
 	var NodeJsEs6 = "NodeJS (ES6)";
 	var Php = "PHP";
 	var Python = "Python";
+	var Eval = "eval";
 }
 
 typedef HistoricalDataPoint = {
