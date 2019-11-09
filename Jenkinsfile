@@ -67,7 +67,7 @@ pipeline {
                 ln -sfn ../../srcPages 
                 '''
 
-                echo 'Preparing build folders for Haxe 4.0.1'
+                echo 'Preparing build folders for Haxe nightly'
                 sh '''
                 cd versions/Haxe-nightly
                 ln -sfn ../../benchmark.sh . 
