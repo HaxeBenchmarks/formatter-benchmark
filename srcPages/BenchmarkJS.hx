@@ -435,7 +435,7 @@ class BenchmarkJS {
 					data.datasets = [haxe4Dataset, haxe4SMADataset];
 				}
 		}
-		if (target == Jvm) {
+		if (target == Jvm || target == Eval) {
 			switch (showAverage) {
 				case JustData:
 					data.datasets = [haxe4Dataset];
