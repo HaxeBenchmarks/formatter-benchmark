@@ -134,11 +134,12 @@ class BenchmarkJS {
 		}
 		request.request();
 
-		var request:Http = new Http("data/archiveHaxe4.json");
+		var request:Http = new Http("data/archiveHaxeNightly.json");
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
 			haxeNightlyData = parser.fromJson(data, "archiveHaxeNightly.json");
 			checkLoaded();
+			trace(haxeNightlyData);
 		}
 		request.onError = function(msg:String) {
 			trace("failed to download Haxe 3 data: " + msg);
@@ -213,7 +214,7 @@ class BenchmarkJS {
 
 		var data = {
 			labels: labels,
-			datasets: [haxe3Dataset, haxe4Dataset, haxeNightlyDataset,]
+			datasets: [haxe3Dataset, haxe4Dataset, haxeNightlyDataset]
 		};
 		for (target in latestHaxe3Data.targets) {
 			var index:Int = data.labels.indexOf(target.name);
