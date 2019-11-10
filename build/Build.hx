@@ -36,6 +36,6 @@ class Build {
 			exitText = ' - exitCode: $exitCode';
 		}
 
-		Sys.println('[${Compiler.getDefine("haxe_ver")}] building $title (${Timer.stamp() - startTime})$exitText');
+		Sys.println('[${Compiler.getDefine("haxe_ver")}] built $title (${Timer.stamp() - startTime})$exitText');
 	}
 }
