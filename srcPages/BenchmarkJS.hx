@@ -4,7 +4,7 @@ import js.Syntax;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 import js.jquery.JQuery;
-> import js.jquery.Event;
+import js.jquery.Event;
 import json2object.JsonParser;
 import data.TestRun;
 import data.ExponentialMovingAverage;
