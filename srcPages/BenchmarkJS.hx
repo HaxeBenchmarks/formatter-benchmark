@@ -20,6 +20,8 @@ class BenchmarkJS {
 	var averageFactory:(windowSize:Int) -> IMovingAverage;
 	var showAverage:ShowAverage;
 	var withHaxe3:Bool;
+	var withHaxe4:Bool;
+	var withHaxeNightly:Bool;
 	var chartObjects:Map<String, Any>;
 
 	public static function main() {
@@ -35,6 +37,8 @@ class BenchmarkJS {
 		averageFactory = SimpleMovingAverage.new;
 		showAverage = DataAndAverage;
 		withHaxe3 = true;
+		withHaxe4 = true;
+		withHaxeNightly = true;
 		chartObjects = new Map<String, Any>();
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
@@ -45,6 +49,8 @@ class BenchmarkJS {
 		new JQuery("#average").change(changeAverage);
 		new JQuery("#averageWindow").change(changeAverageWindow);
 		new JQuery("#withHaxe3").change(changeWithHaxe3);
+		new JQuery("#withHaxe4").change(changeWithHaxe4);
+		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
 	}
 
 	function changeOnlyAverage(event:Event) {
@@ -70,6 +76,16 @@ class BenchmarkJS {
 
 	function changeWithHaxe3(event:Event) {
 		withHaxe3 = new JQuery("#withHaxe3").is(":checked");
+		showData();
+	}
+
+	function changeWithHaxe4(event:Event) {
+		withHaxe4 = new JQuery("#withHaxe4").is(":checked");
+		showData();
+	}
+
+	function changeWithHaxeNightly(event:Event) {
+		withHaxeNightly = new JQuery("#withHaxeNightly").is(":checked");
 		showData();
 	}
 
@@ -399,8 +415,12 @@ class BenchmarkJS {
 		if (withHaxe3) {
 			datasetData = datasetData.concat(collectRunData(target, haxe3Data, Haxe3));
 		}
-		datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4));
-		datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly));
+		if (withHaxe4) {
+			datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4));
+		}
+		if (withHaxeNightly) {
+			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly));
+		}
 		datasetData.sort(sortDate);
 		// datasetData = mergeTimes(datasetData);
 
