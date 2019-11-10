@@ -14,9 +14,7 @@ class Build {
 		callLix("build/buildJava.hxml", "Java");
 		callLix("build/buildJvm.hxml", "JVM");
 		callLix("build/buildHl.hxml", "HL/Jit");
-		#if haxe4
 		callLix("build/buildHlc.hxml", "HL/C");
-		#end
 		callLix("build/buildJs.hxml", "JS/ES5");
 		callLix("build/buildJsES6.hxml", "JS/ES6");
 		callLix("build/buildNeko.hxml", "Neko");
