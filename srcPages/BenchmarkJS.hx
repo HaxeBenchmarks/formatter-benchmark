@@ -422,21 +422,17 @@ class BenchmarkJS {
 			datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly));
 		}
 		datasetData.sort(sortDate);
-		// datasetData = mergeTimes(datasetData);
+		datasetData = mergeTimes(datasetData);
 
 		data.datasets = graphDataSets.map(item -> item.dataset);
 
 		for (item in datasetData) {
 			data.labels.push(item.date);
 			for (graph in graphDataSets) {
-				if (item.type != graph.type) {
-					graph.dataset.data.push(null);
-					continue;
-				}
 				if (graph.movingAverage) {
-					graph.dataset.data.push(item.sma);
+					graph.dataset.data.push(item.sma.get(graph.type));
 				} else {
-					graph.dataset.data.push(item.time);
+					graph.dataset.data.push(item.time.get(graph.type));
 				}
 			}
 		}
@@ -487,23 +483,30 @@ class BenchmarkJS {
 		Syntax.code("{0}.update()", chart);
 	}
 
-	// function mergeTimes(datasetData:Array<HistoricalDataPoint>):Array<HistoricalDataPoint> {
-	// 	var result:Array<HistoricalDataPoint> = [];
-	// 	var lastDataPoint:Null<HistoricalDataPoint> = null;
-	// 	for (data in datasetData) {
-	// 		if (lastDataPoint == null) {
-	// 			lastDataPoint = data;
-	// 			result.push(data);
-	// 			continue;
-	// 		}
-	// 		if (lastDataPoint.date != data.date) {
-	// 			lastDataPoint = data;
-	// 			result.push(data);
-	// 			continue;
-	// 		}
-	// 	}
-	// 	return result;
-	// }
+	function mergeTimes(datasetData:Array<HistoricalDataPoint>):Array<HistoricalDataPoint> {
+		var result:Array<HistoricalDataPoint> = [];
+		var lastDataPoint:Null<HistoricalDataPoint> = null;
+		for (data in datasetData) {
+			if (lastDataPoint == null) {
+				lastDataPoint = data;
+				result.push(data);
+				continue;
+			}
+			if (lastDataPoint.date.substr(0, lastDataPoint.date.length - 2) != data.date.substr(0, data.date.length - 2)) {
+				lastDataPoint = data;
+				result.push(data);
+				continue;
+			}
+			for (key => val in data.time) {
+				lastDataPoint.time.set(key, val);
+			}
+			for (key => val in data.sma) {
+				lastDataPoint.sma.set(key, val);
+			}
+		}
+		trace(result);
+		return result;
+	}
 
 	function collectRunData(target:Target, resultsData:ArchivedResults, type:DatasetType):Array<HistoricalDataPoint> {
 		var average:IMovingAverage = averageFactory(windowSize);
@@ -515,10 +518,9 @@ class BenchmarkJS {
 			}
 			average.addValue(time);
 			datasetData.push({
-				time: time,
-				sma: average.getAverage(),
-				date: run.date,
-				type: type
+				time: [type => time],
+				sma: [type => average.getAverage()],
+				date: run.date
 			});
 		}
 		return datasetData;
@@ -588,10 +590,9 @@ abstract Target(String) to String {
 }
 
 typedef HistoricalDataPoint = {
-	var time:TimeValue;
-	var sma:TimeValue;
+	var time:Map<DatasetType, TimeValue>;
+	var sma:Map<DatasetType, TimeValue>;
 	var date:String;
-	var type:DatasetType;
 }
 
 enum ShowAverage {
