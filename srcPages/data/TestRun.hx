@@ -15,9 +15,10 @@ typedef TargetResult = {
 	var time:TimeValue;
 }
 
-enum Dataset {
+enum DatasetType {
 	Haxe3;
 	Haxe4;
+	HaxeNightly;
 }
 
 abstract TimeValue(Float) to Float {
