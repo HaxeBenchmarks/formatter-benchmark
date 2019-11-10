@@ -4,7 +4,7 @@ import js.Syntax;
 import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
 import js.jquery.JQuery;
-import js.jquery.Event;
+> import js.jquery.Event;
 import json2object.JsonParser;
 import data.TestRun;
 import data.ExponentialMovingAverage;
@@ -14,6 +14,7 @@ import data.SimpleMovingAverage;
 class BenchmarkJS {
 	var haxe3Data:Null<ArchivedResults>;
 	var haxe4Data:Null<ArchivedResults>;
+	var haxeNightlyData:Null<ArchivedResults>;
 	var documentLoaded:Bool;
 	var windowSize:Int;
 	var averageFactory:(windowSize:Int) -> IMovingAverage;
@@ -28,6 +29,7 @@ class BenchmarkJS {
 	public function new() {
 		haxe3Data = null;
 		haxe4Data = null;
+		haxeNightlyData = null;
 		documentLoaded = false;
 		windowSize = 6;
 		averageFactory = SimpleMovingAverage.new;
@@ -122,7 +124,6 @@ class BenchmarkJS {
 		request.request();
 
 		var request:Http = new Http("data/archiveHaxe4.json");
-
 		request.onData = function(data:String) {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
 			haxe4Data = parser.fromJson(data, "archiveHaxe4.json");
@@ -132,6 +133,17 @@ class BenchmarkJS {
 			trace("failed to download Haxe 4 data: " + msg);
 		}
 		request.request();
+
+		var request:Http = new Http("data/archiveHaxe4.json");
+		request.onData = function(data:String) {
+			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
+			haxeNightlyData = parser.fromJson(data, "archiveHaxeNightly.json");
+			checkLoaded();
+		}
+		request.onError = function(msg:String) {
+			trace("failed to download Haxe 3 data: " + msg);
+		}
+		request.request();
 	}
 
 	function checkLoaded() {
@@ -139,6 +151,9 @@ class BenchmarkJS {
 			return;
 		}
 		if (haxe4Data == null) {
+			return;
+		}
+		if (haxeNightlyData == null) {
 			return;
 		}
 		if (!documentLoaded) {
@@ -157,6 +172,7 @@ class BenchmarkJS {
 		showHistory(HashlinkC, "hlcBenchmarks");
 		showHistory(Csharp, "csharpBenchmarks");
 		showHistory(NodeJs, "nodeBenchmarks");
+		showHistory(NodeJsEs6, "nodeES6Benchmarks");
 		showHistory(Neko, "nekoBenchmarks");
 		showHistory(Eval, "evalBenchmarks");
 		showHistory(Php, "phpBenchmarks");
@@ -166,7 +182,10 @@ class BenchmarkJS {
 	function showLatest() {
 		var latestHaxe3Data:TestRun = haxe3Data[haxe3Data.length - 1];
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
-		var labels:Array<String> = [Cpp, Csharp, Hashlink, Java, Neko, NodeJs, Eval, Php, Python];
+		var latestHaxeNightlyData:TestRun = haxeNightlyData[haxeNightlyData.length - 1];
+		var labels:Array<String> = [
+			Cpp, Csharp, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Eval, Php, Python
+		];
 
 		var haxe3Dataset = {
 			label: latestHaxe3Data.haxeVersion,
@@ -184,17 +203,17 @@ class BenchmarkJS {
 			data: [for (label in labels) null]
 		};
 
-		var haxe4ES6Dataset = {
-			label: latestHaxe4Data.haxeVersion + " (ES6 + HL/C + JVM)",
-			backgroundColor: "#66FF66",
-			borderColor: "#00FF00",
+		var haxeNightlyDataset = {
+			label: latestHaxeNightlyData.haxeVersion,
+			backgroundColor: "#030027",
+			borderColor: "#0000FF",
 			borderWidth: 1,
 			data: [for (label in labels) null]
 		};
 
 		var data = {
 			labels: labels,
-			datasets: [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset]
+			datasets: [haxe3Dataset, haxe4Dataset, haxeNightlyDataset,]
 		};
 		for (target in latestHaxe3Data.targets) {
 			var index:Int = data.labels.indexOf(target.name);
@@ -212,18 +231,13 @@ class BenchmarkJS {
 				continue;
 			}
 			haxe4Dataset.data[index] = target.time;
-			if (target.name == NodeJs) {
-				var time:Null<Float> = getHistoryTime(latestHaxe4Data, NodeJsEs6);
-				haxe4ES6Dataset.data[index] = time;
+		}
+		for (target in latestHaxeNightlyData.targets) {
+			var index:Int = data.labels.indexOf(target.name);
+			if (index < 0) {
+				continue;
 			}
-			if (target.name == Hashlink) {
-				var time:Null<Float> = getHistoryTime(latestHaxe4Data, HashlinkC);
-				haxe4ES6Dataset.data[index] = time;
-			}
-			if (target.name == Java) {
-				var time:Null<Float> = getHistoryTime(latestHaxe4Data, Jvm);
-				haxe4ES6Dataset.data[index] = time;
-			}
+			haxeNightlyDataset.data[index] = target.time;
 		}
 
 		var options = {
@@ -355,185 +369,54 @@ class BenchmarkJS {
 	}
 
 	function showHistory(target:Target, canvasId:String) {
-		var haxe3Dataset = {
-			label: target + " (Haxe 3)",
-			backgroundColor: "#FF6666",
-			borderColor: "#FF0000",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
-		var haxe3SMADataset = {
-			label: target + " (Haxe 3 avg)",
-			backgroundColor: "#FFCCCC",
-			borderColor: "#FFCCCC",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
+		var graphDataSets:Array<GraphDatasetInfo> = makeGraphDatasets(target);
 
-		var haxe4Dataset = {
-			label: target + " (Haxe 4)",
-			backgroundColor: "#6666FF",
-			borderColor: "#0000FF",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
-		var haxe4SMADataset = {
-			label: target + " (Haxe 4 avg)",
-			backgroundColor: "#CCCCFF",
-			borderColor: "#CCCCFF",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
+		graphDataSets = graphDataSets.filter(function(info:GraphDatasetInfo):Bool {
+			if ((info.type == Haxe3) && (target == Jvm || target == Eval || target == NodeJsEs6)) {
+				return false;
+			}
+			switch showAverage {
+				case JustData:
+					if (info.movingAverage) {
+						return false;
+					}
+				case OnlyAverage:
+					if (!info.movingAverage) {
+						return false;
+					}
+				case DataAndAverage:
+			}
+			return true;
+		});
 
-		var haxe4ES6Dataset = {
-			label: target + " (Haxe 4 (ES6))",
-			backgroundColor: "#66FF66",
-			borderColor: "#00FF00",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
-		var haxe4ES6SMADataset = {
-			label: target + " (Haxe 4 (ES6) avg)",
-			backgroundColor: "#CCFFCC",
-			borderColor: "#CCFFCC",
-			borderWidth: 1,
-			fill: false,
-			spanGaps: true,
-			data: []
-		};
 		var data = {
 			labels: [],
 			datasets: []
 		};
-		switch (showAverage) {
-			case JustData:
-				if (withHaxe3) {
-					data.datasets = [haxe3Dataset, haxe4Dataset];
-				} else {
-					data.datasets = [haxe4Dataset];
-				}
-			case OnlyAverage:
-				if (withHaxe3) {
-					data.datasets = [haxe3SMADataset, haxe4SMADataset];
-				} else {
-					data.datasets = [haxe4SMADataset];
-				}
-			case DataAndAverage:
-				if (withHaxe3) {
-					data.datasets = [haxe3Dataset, haxe3SMADataset, haxe4Dataset, haxe4SMADataset];
-				} else {
-					data.datasets = [haxe4Dataset, haxe4SMADataset];
-				}
-		}
-		if (target == Jvm || target == Eval) {
-			switch (showAverage) {
-				case JustData:
-					data.datasets = [haxe4Dataset];
-				case OnlyAverage:
-					data.datasets = [haxe4SMADataset];
-				case DataAndAverage:
-					data.datasets = [haxe4Dataset, haxe4SMADataset];
-			}
-		}
-		if (target == NodeJs) {
-			switch (showAverage) {
-				case JustData:
-					if (withHaxe3) {
-						data.datasets = [haxe3Dataset, haxe4Dataset, haxe4ES6Dataset];
-					} else {
-						data.datasets = [haxe4Dataset, haxe4ES6Dataset];
-					}
-				case OnlyAverage:
-					if (withHaxe3) {
-						data.datasets = [haxe3SMADataset, haxe4SMADataset, haxe4ES6SMADataset];
-					} else {
-						data.datasets = [haxe4SMADataset, haxe4ES6SMADataset];
-					}
-				case DataAndAverage:
-					if (withHaxe3) {
-						data.datasets = [
-							haxe3Dataset,
-							haxe3SMADataset,
-							haxe4Dataset,
-							haxe4SMADataset,
-							haxe4ES6Dataset,
-							haxe4ES6SMADataset
-						];
-					} else {
-						data.datasets = [haxe4Dataset, haxe4SMADataset, haxe4ES6Dataset, haxe4ES6SMADataset];
-					}
-			}
-		}
 
 		var datasetData:Array<HistoricalDataPoint> = [];
-		var average:IMovingAverage = averageFactory(windowSize);
 		if (withHaxe3) {
-			for (run in haxe3Data) {
-				var time:Null<Float> = getHistoryTime(run, target);
-				if (time == null) {
-					continue;
-				}
-				average.addValue(time);
-				datasetData.push({
-					time: time,
-					sma: average.getAverage(),
-					date: run.date,
-					dataset: Haxe3
-				});
-			}
+			datasetData = datasetData.concat(collectRunData(target, haxe3Data, Haxe3));
 		}
-		var average:IMovingAverage = averageFactory(windowSize);
-		var average2:IMovingAverage = averageFactory(windowSize);
-		for (run in haxe4Data) {
-			var time:Null<Float> = getHistoryTime(run, target);
-			if (time == null) {
-				continue;
-			}
-			var time2:Null<Float> = null;
-			if (target == NodeJs) {
-				time2 = getHistoryTime(run, NodeJsEs6);
-			}
-			average.addValue(time);
-			average2.addValue(time2);
-			datasetData.push({
-				time: time,
-				sma: average.getAverage(),
-				time2: time2,
-				sma2: average2.getAverage(),
-				date: run.date,
-				dataset: Haxe4
-			});
-		}
+		datasetData = datasetData.concat(collectRunData(target, haxe4Data, Haxe4));
+		datasetData = datasetData.concat(collectRunData(target, haxeNightlyData, HaxeNightly));
 		datasetData.sort(sortDate);
+		// datasetData = mergeTimes(datasetData);
+
+		data.datasets = graphDataSets.map(item -> item.dataset);
+
 		for (item in datasetData) {
 			data.labels.push(item.date);
-			switch (item.dataset) {
-				case Haxe3:
-					haxe3Dataset.data.push(item.time);
-					haxe3SMADataset.data.push(item.sma);
-					haxe4Dataset.data.push(null);
-					haxe4SMADataset.data.push(null);
-					haxe4ES6Dataset.data.push(null);
-					haxe4ES6SMADataset.data.push(null);
-				case Haxe4:
-					if (withHaxe3) {
-						haxe3Dataset.data.push(null);
-						haxe3SMADataset.data.push(null);
-					}
-					haxe4Dataset.data.push(item.time);
-					haxe4SMADataset.data.push(item.sma);
-					haxe4ES6Dataset.data.push(item.time2);
-					haxe4ES6SMADataset.data.push(item.sma2);
+			for (graph in graphDataSets) {
+				if (item.type != graph.type) {
+					graph.dataset.data.push(null);
+					continue;
+				}
+				if (graph.movingAverage) {
+					graph.dataset.data.push(item.time);
+				} else {
+					graph.dataset.data.push(item.sma);
+				}
 			}
 		}
 
@@ -583,6 +466,70 @@ class BenchmarkJS {
 		Syntax.code("{0}.update()", chart);
 	}
 
+	// function mergeTimes(datasetData:Array<HistoricalDataPoint>):Array<HistoricalDataPoint> {
+	// 	var result:Array<HistoricalDataPoint> = [];
+	// 	var lastDataPoint:Null<HistoricalDataPoint> = null;
+	// 	for (data in datasetData) {
+	// 		if (lastDataPoint == null) {
+	// 			lastDataPoint = data;
+	// 			result.push(data);
+	// 			continue;
+	// 		}
+	// 		if (lastDataPoint.date != data.date) {
+	// 			lastDataPoint = data;
+	// 			result.push(data);
+	// 			continue;
+	// 		}
+	// 	}
+	// 	return result;
+	// }
+
+	function collectRunData(target:Target, resultsData:ArchivedResults, type:DatasetType):Array<HistoricalDataPoint> {
+		var average:IMovingAverage = averageFactory(windowSize);
+		var datasetData:Array<HistoricalDataPoint> = [];
+		for (run in resultsData) {
+			var time:Null<Float> = getHistoryTime(run, target);
+			if (time == null) {
+				continue;
+			}
+			average.addValue(time);
+			datasetData.push({
+				time: time,
+				sma: average.getAverage(),
+				date: run.date,
+				type: type
+			});
+		}
+		return datasetData;
+	}
+
+	function makeGraphDatasets(target:Target):Array<GraphDatasetInfo> {
+		return [
+			makeGraphDataset(Haxe3, false, target + " (Haxe 3)", "#FF6666", "#FF0000"),
+			makeGraphDataset(Haxe3, true, target + " (Haxe 3 avg)", "#FFCCCC", "#FFCCCC"),
+			makeGraphDataset(Haxe4, false, target + " (Haxe 4)", "#6666FF", "#0000FF"),
+			makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#CCCCFF", "#CCCCFF"),
+			makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#030027", "#0000FF"),
+			makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#8888FF", "#8888FF"),
+		];
+	}
+
+	function makeGraphDataset(type:DatasetType, movingAverage:Bool, label:String, backgroundColor:String, borderColor:String):GraphDatasetInfo {
+		return {
+			type: type,
+			movingAverage: movingAverage,
+			dataset: {
+				label: label,
+				backgroundColor: backgroundColor,
+				borderColor: borderColor,
+				borderWidth: 1,
+				fill: false,
+				spanGaps: true,
+				data: []
+			}
+		}
+	}
+
 	function sortDate(a:HistoricalDataPoint, b:HistoricalDataPoint):Int {
 		if (a.date > b.date) {
 			return 1;
@@ -622,14 +569,28 @@ abstract Target(String) to String {
 typedef HistoricalDataPoint = {
 	var time:TimeValue;
 	var sma:TimeValue;
-	var ?time2:TimeValue;
-	var ?sma2:TimeValue;
 	var date:String;
-	var dataset:Dataset;
+	var type:DatasetType;
 }
 
 enum ShowAverage {
 	JustData;
 	OnlyAverage;
 	DataAndAverage;
+}
+
+typedef GraphDatasetInfo = {
+	var type:DatasetType;
+	var movingAverage:Bool;
+	var dataset:GraphDataset;
+}
+
+typedef GraphDataset = {
+	var label:String;
+	var backgroundColor:String;
+	var borderColor:String;
+	var borderWidth:Int;
+	var fill:Bool;
+	var spanGaps:Bool;
+	var data:Array<TimeValue>;
 }
