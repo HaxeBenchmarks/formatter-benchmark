@@ -10,17 +10,16 @@
     <h1>Haxe Formatter Benchmark</h1>
     <p>
         <ul>
-            <li>runs on TravisCI so results will also reflect variations in TravisCI's build agent performance</li>
-            <li>each commit triggers two build jobs one using Haxe 3.4.7 and one using Haxe 4 devlopment</li>
-            <li>a cron job triggers daily builds</li>
-            <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Hashlink/C, Java, JVM, Neko, NodeJS, PHP and Python
+            <li>benchmark runs use lix and run on Haxe 3.4.7, Haxe 4.0.1 and Haxe 4 nightly</li>
+            <li>a cron job triggers builds multiple times a day</li>
+            <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Hashlink/C, Java, JVM, eval, Neko, NodeJS, PHP and Python
                 targets</li>
-            <li>JVM is not available on Haxe 3 (Haxe 4 only)</li>
-            <li>Haxe 3 uses Hashlink 1.1, Haxe 4 Hashlink git</li>
-            <li>NodeJS compilation is run twice, with and without "-D js-es=6"</li>
-            <li>each target binary formats git versions of Haxe std, Openfl and Lime sources and reports total runtime
+            <li>JVM and eval are not available on Haxe 3 (Haxe 4 only)</li>
+            <li>Haxe 3 uses Hashlink 1.1, Haxe 4 Hashlink 1.10</li>
+            <li>NodeJS compilation is run twice, with and without "-D js-es=6" (haxe 4 builds only)</li>
+            <li>each target formats git versions of Haxe std, Openfl and Lime sources and reports total runtime
             </li>
-            <li>results are uploaded automatically after every build (page does not automatically reload)</li>
+            <li>results update after every build (page doesn't automatically reload)</li>
         </ul>
     </p>
 
