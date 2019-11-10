@@ -116,7 +116,7 @@ pipeline {
                 echo 'Build targets for Haxe 3.4.7'
                 sh '''
                 cd versions/Haxe-3.4.7
-                haxe buildAll.hxml
+                ./build.sh
                 '''
             }
         }
@@ -126,7 +126,7 @@ pipeline {
                 echo 'Build targets for Haxe 4.0.1'
                 sh '''
                 cd versions/Haxe-4.0.1
-                haxe buildAll.hxml
+                ./build.sh
                 '''
             }
         }
@@ -136,7 +136,7 @@ pipeline {
                 echo 'Build targets for Haxe nightly'
                 sh '''
                 cd versions/Haxe-nightly
-                haxe buildAll.hxml
+                ./build.sh
                 '''
             }
         }
