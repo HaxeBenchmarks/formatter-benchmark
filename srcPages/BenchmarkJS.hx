@@ -1,15 +1,15 @@
 import haxe.Http;
 import js.Browser;
 import js.Syntax;
-import js.html.CanvasRenderingContext2D;
 import js.html.CanvasElement;
-import js.jquery.JQuery;
+import js.html.CanvasRenderingContext2D;
 import js.jquery.Event;
-import json2object.JsonParser;
-import data.TestRun;
+import js.jquery.JQuery;
 import data.ExponentialMovingAverage;
 import data.IMovingAverage;
 import data.SimpleMovingAverage;
+import data.TestRun;
+import json2object.JsonParser;
 
 class BenchmarkJS {
 	var haxe3Data:Null<ArchivedResults>;
@@ -155,7 +155,6 @@ class BenchmarkJS {
 			var parser:JsonParser<ArchivedResults> = new JsonParser<ArchivedResults>();
 			haxeNightlyData = parser.fromJson(data, "archiveHaxeNightly.json");
 			checkLoaded();
-			trace(haxeNightlyData);
 		}
 		request.onError = function(msg:String) {
 			trace("failed to download Haxe 3 data: " + msg);
@@ -424,8 +423,6 @@ class BenchmarkJS {
 		datasetData.sort(sortDate);
 		datasetData = mergeTimes(datasetData);
 
-		data.datasets = graphDataSets.map(item -> item.dataset);
-
 		for (item in datasetData) {
 			data.labels.push(item.date);
 			for (graph in graphDataSets) {
@@ -436,6 +433,7 @@ class BenchmarkJS {
 				}
 			}
 		}
+		data.datasets = graphDataSets.map(item -> item.dataset);
 
 		var options = {
 			type: "line",
@@ -504,7 +502,6 @@ class BenchmarkJS {
 				lastDataPoint.sma.set(key, val);
 			}
 		}
-		trace(result);
 		return result;
 	}
 
