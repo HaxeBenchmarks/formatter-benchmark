@@ -221,8 +221,8 @@ class BenchmarkJS {
 
 		var haxeNightlyDataset = {
 			label: latestHaxeNightlyData.haxeVersion,
-			backgroundColor: "#030027",
-			borderColor: "#0000FF",
+			backgroundColor: "#66FF66",
+			borderColor: "#33FF33",
 			borderWidth: 1,
 			data: [for (label in labels) null]
 		};
@@ -529,8 +529,8 @@ class BenchmarkJS {
 			makeGraphDataset(Haxe3, true, target + " (Haxe 3 avg)", "#FFCCCC", "#FFCCCC"),
 			makeGraphDataset(Haxe4, false, target + " (Haxe 4)", "#0000FF", "#0000FF"),
 			makeGraphDataset(Haxe4, true, target + " (Haxe 4 avg)", "#CCCCFF", "#CCCCFF"),
-			makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#030027", "#030027"),
-			makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#8888FF", "#8888FF"),
+			makeGraphDataset(HaxeNightly, false, target + " (Haxe nightly)", "#66FF66", "#66FF66"),
+			makeGraphDataset(HaxeNightly, true, target + " (Haxe nightly avg)", "#CCFFCC", "#CCFFCC"),
 		];
 	}
 
