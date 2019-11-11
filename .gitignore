@@ -2,6 +2,7 @@ out/
 dev/
 data/
 datax/
+node_modules/
 testdata/
 versions/Haxe-*/benchmark.sh
 versions/Haxe-*/build
