@@ -52,7 +52,7 @@ pipeline {
                 ln -sfn ../../srcPages 
                 '''
 
-                echo 'Preparing build folders for Haxe 4.0.1'
+                echo 'Preparing build folders for Haxe 4.0.2'
                 sh '''
                 cd versions/Haxe-4.0.1
                 ln -sfn ../../benchmark.sh . 
@@ -93,7 +93,7 @@ pipeline {
                 lix install haxelib:hxcpp 
                 '''
 
-                echo 'Update lix dependencies for Haxe 4.0.1'
+                echo 'Update lix dependencies for Haxe 4.0.2'
                 sh '''
                 cd versions/Haxe-4.0.1
                 lix download 
@@ -121,9 +121,9 @@ pipeline {
             }
         }
 
-        stage('Build Haxe 4.0.1') {
+        stage('Build Haxe 4.0.2') {
             steps {
-                echo 'Build targets for Haxe 4.0.1'
+                echo 'Build targets for Haxe 4.0.2'
                 sh '''
                 cd versions/Haxe-4.0.1
                 ./build.sh
@@ -153,9 +153,9 @@ pipeline {
             }
         }
 
-        stage('Run Haxe 4.0.1 benchmarks') {
+        stage('Run Haxe 4.0.2 benchmarks') {
             steps {
-                echo 'Run benchmarks for Haxe 4.0.1'
+                echo 'Run benchmarks for Haxe 4.0.2'
                 sh '''
                 cd versions/Haxe-4.0.1
                 readonly VER=`haxe -version`
@@ -187,9 +187,9 @@ pipeline {
             }
         }
 
-        stage('Convert results for Haxe 4.0.1') {
+        stage('Convert results for Haxe 4.0.2') {
             steps {
-                echo 'Convert results for Haxe 4.0.1'
+                echo 'Convert results for Haxe 4.0.2'
                 sh '''
                 cd versions/Haxe-4.0.1
                 haxe buildConvertCsv.hxml
