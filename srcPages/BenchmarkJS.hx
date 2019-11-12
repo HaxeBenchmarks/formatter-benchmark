@@ -15,6 +15,9 @@ class BenchmarkJS {
 	var haxe3Data:Null<ArchivedResults>;
 	var haxe4Data:Null<ArchivedResults>;
 	var haxeNightlyData:Null<ArchivedResults>;
+	var haxe3Version:String;
+	var haxe4Version:String;
+	var haxeNightlyVersion:String;
 	var documentLoaded:Bool;
 	var windowSize:Int;
 	var averageFactory:(windowSize:Int) -> IMovingAverage;
@@ -32,6 +35,9 @@ class BenchmarkJS {
 		haxe3Data = null;
 		haxe4Data = null;
 		haxeNightlyData = null;
+		haxe3Version = "3";
+		haxe4Version = "4";
+		haxeNightlyVersion = "nightly";
 		documentLoaded = false;
 		windowSize = 6;
 		averageFactory = SimpleMovingAverage.new;
@@ -179,6 +185,10 @@ class BenchmarkJS {
 	}
 
 	function showData() {
+		haxe3Version = haxe3Data[haxe3Data.length - 1].haxeVersion;
+		haxe4Version = haxe4Data[haxe4Data.length - 1].haxeVersion;
+		haxeNightlyVersion = haxeNightlyData[haxeNightlyData.length - 1].haxeVersion;
+
 		showLatest();
 		showLinesOfCode();
 		showHistory(Cpp, "cppBenchmarks");
@@ -200,7 +210,7 @@ class BenchmarkJS {
 		var latestHaxe4Data:TestRun = haxe4Data[haxe4Data.length - 1];
 		var latestHaxeNightlyData:TestRun = haxeNightlyData[haxeNightlyData.length - 1];
 		var labels:Array<String> = [
-			Cpp, Csharp, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Eval, Php, Python
+			Cpp, Csharp, Eval, Hashlink, HashlinkC, Java, Jvm, Neko, NodeJs, NodeJsEs6, Php, Python
 		];
 
 		var haxe3Dataset = {
@@ -236,8 +246,10 @@ class BenchmarkJS {
 			if (index < 0) {
 				continue;
 			}
-			if (target.name == Jvm) {
-				continue;
+			switch (target.name) {
+				case Jvm | Eval | NodeJsEs6:
+					continue;
+				default:
 			}
 			haxe3Dataset.data[index] = target.time;
 		}
