@@ -8,6 +8,7 @@ function resetGit {
     for i in $( ls data ) ; do (cd data/$i; git checkout -- .); done;
 }
 
+resetGit
 ./out/cpp/Cli $DATA
 resetGit
 node out/formatter.js $DATA

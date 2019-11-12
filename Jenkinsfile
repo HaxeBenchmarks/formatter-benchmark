@@ -20,17 +20,7 @@ pipeline {
 
                 echo "Download / update test data (Haxe stdlib, OpenFl and Lime sources)"
                 sh '''
-                mkdir -p data
-                cd data
-                if [ ! -d haxe ]; then
-                    git clone --depth 1 https://github.com/HaxeFoundation/haxe
-                fi
-                if [ ! -d openfl ]; then
-                    git clone --depth 1 https://github.com/openfl/openfl
-                fi
-                if [ ! -d lime ]; then
-                    git clone --depth 1 https://github.com/openfl/lime
-                fi
+                echo "not updating inputdata"
                 '''
             }
         }
@@ -44,9 +34,9 @@ pipeline {
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
                 ln -sfn ../../buildConvertCsv.hxml 
-                ln -sfn ../../data 
                 ln -sfn ../../haxe3_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
+                ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
                 ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-3.4.7 results 
                 ln -sfn ../../src 
                 ln -sfn ../../srcPages 
@@ -59,9 +49,9 @@ pipeline {
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
                 ln -sfn ../../buildConvertCsv.hxml 
-                ln -sfn ../../data 
                 ln -sfn ../../haxe_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
+                ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
                 ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-4.0.1 results 
                 ln -sfn ../../src 
                 ln -sfn ../../srcPages 
@@ -74,9 +64,9 @@ pipeline {
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
                 ln -sfn ../../buildConvertCsv.hxml 
-                ln -sfn ../../data 
                 ln -sfn ../../haxe_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
+                ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
                 ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-nightly results 
                 ln -sfn ../../src 
                 ln -sfn ../../srcPages 
