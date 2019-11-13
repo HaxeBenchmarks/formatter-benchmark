@@ -10,7 +10,7 @@ java -jar out/jvm/NoIOMain.jar
 hl out/formatter.hl
 ./out/hl/formatterCLI
 mono out/cs/bin/NoIOMain.exe
-haxe build/common.hxml --run NoIOMain
+haxe build/commonNoIO.hxml --run NoIOMain
 php out/php/index.php
 neko out/formatter.n
 python3 out/formatter.py
