@@ -33,9 +33,48 @@ class BenchmarkStatMacro {
 
 		return newFields;
 	}
+
+	static function mapOutput2Target():String {
+		var output = Compiler.getOutput();
+
+		if (~/\.n$/.match(output)) {
+			return "Neko";
+		}
+		if (~/\.es6\.js$/.match(output)) {
+			return "NodeJS (ES6)";
+		}
+		if (~/\.js$/.match(output)) {
+			return "NodeJS";
+		}
+		if (~/\.hl$/.match(output)) {
+			return "Hashlink";
+		}
+		if (~/\.c$/.match(output)) {
+			return "Hashlink/C";
+		}
+		if (~/cpp$/.match(output)) {
+			return "C++";
+		}
+		if (~/cs$/.match(output)) {
+			return "C#";
+		}
+		if (~/java$/.match(output)) {
+			return "Java";
+		}
+		if (~/jvm$/.match(output)) {
+			return "JVM";
+		}
+		if (~/php$/.match(output)) {
+			return "PHP";
+		}
+		if (~/\.py$/.match(output)) {
+			return "Python";
+		}
+		return "eval";
+	}
 	#end
 
-	macro public static function mapOutput2Target():Expr {
+	macro public static function macroMapOutput2Target():Expr {
 		var output = Compiler.getOutput();
 
 		if (~/\.n$/.match(output)) {
@@ -71,7 +110,6 @@ class BenchmarkStatMacro {
 		if (~/\.py$/.match(output)) {
 			return macro "Python";
 		}
-
 		return macro "eval";
 	}
 
@@ -80,7 +118,7 @@ class BenchmarkStatMacro {
 		try {
 			var sources:Array<String> = [];
 
-			var folderFunc:(path:String) -> Void;
+			var folderFunc:String->Void;
 			folderFunc = function(path:String):Void {
 				for (f in FileSystem.readDirectory(path)) {
 					var fileName:String = Path.join([path, f]);

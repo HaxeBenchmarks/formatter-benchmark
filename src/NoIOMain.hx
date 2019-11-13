@@ -45,7 +45,7 @@ class NoIOMain {
 	}
 
 	function printStats(duration:Float) {
-		var target = BenchmarkStatMacro.mapOutput2Target();
+		var target = BenchmarkStatMacro.macroMapOutput2Target();
 		var version:String = FormatterVersion.getFormatterVersion();
 		Sys.println('$target;$version;${Std.string(formatter.FormatStats.totalLinesOrig)};'
 			+ '${Std.string(formatter.FormatStats.totalLinesFormatted)};${Std.string(duration)}');
