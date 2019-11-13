@@ -32,7 +32,7 @@ pipeline {
                 cd versions/Haxe-3
                 ln -sfn ../../benchmarkNoIO.sh benchmark.sh
                 ln -sfn ../../build 
-                ln -sfn ../../buildAll.hxml . 
+                ln -sfn ../../buildAllNoIO.hxml buildAll.hxml
                 ln -sfn ../../buildConvertCsv.hxml 
                 ln -sfn ../../haxe3_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
@@ -47,7 +47,7 @@ pipeline {
                 cd versions/Haxe-4
                 ln -sfn ../../benchmarkNoIO.sh benchmark.sh 
                 ln -sfn ../../build 
-                ln -sfn ../../buildAll.hxml . 
+                ln -sfn ../../buildAllNoIO.hxml buildAll.hxml
                 ln -sfn ../../buildConvertCsv.hxml 
                 ln -sfn ../../haxe_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
@@ -62,7 +62,7 @@ pipeline {
                 cd versions/Haxe-nightly
                 ln -sfn ../../benchmarkNoIO.sh benchmark.sh
                 ln -sfn ../../build 
-                ln -sfn ../../buildAll.hxml . 
+                ln -sfn ../../buildAllNoIO.hxml buildAll.hxml
                 ln -sfn ../../buildConvertCsv.hxml 
                 ln -sfn ../../haxe_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 

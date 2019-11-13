@@ -7,6 +7,7 @@ testdata/
 versions/Haxe-*/benchmark.sh
 versions/Haxe-*/build
 versions/Haxe-*/buildAll.hxml
+versions/Haxe-*/buildAllNoIO.hxml
 versions/Haxe-*/data
 versions/Haxe-*/haxe_libraries
 versions/Haxe-*/haxelib.json
