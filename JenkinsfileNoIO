@@ -13,9 +13,9 @@ pipeline {
             steps {
                 echo 'Prepare results folders'
                 sh '''
-                mkdir -p results/Haxe-3
-                mkdir -p results/Haxe-4
-                mkdir -p results/Haxe-nightly
+                mkdir -p /home/benchmarkdata/formatter-benchmark-noio/Haxe-3
+                mkdir -p /home/benchmarkdata/formatter-benchmark-noio/Haxe-4
+                mkdir -p /home/benchmarkdata/formatter-benchmark-noio/Haxe-nightly
                 '''
 
                 echo "Download / update test data (Haxe stdlib, OpenFl and Lime sources)"
@@ -30,14 +30,14 @@ pipeline {
                 echo 'Preparing build folders for Haxe 3'
                 sh '''
                 cd versions/Haxe-3
-                ln -sfn ../../benchmark.sh . 
+                ln -sfn ../../benchmarkNoIO.sh benchmark.sh
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
                 ln -sfn ../../buildConvertCsv.hxml 
                 ln -sfn ../../haxe3_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
-                ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
-                ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-3 results 
+                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/inputdata dataNoIO
+                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-3 results 
                 ln -sfn ../../src 
                 ln -sfn ../../srcPages 
                 '''
@@ -45,14 +45,14 @@ pipeline {
                 echo 'Preparing build folders for Haxe 4'
                 sh '''
                 cd versions/Haxe-4
-                ln -sfn ../../benchmark.sh . 
+                ln -sfn ../../benchmarkNoIO.sh benchmark.sh 
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
                 ln -sfn ../../buildConvertCsv.hxml 
                 ln -sfn ../../haxe_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
-                ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
-                ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-4 results 
+                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/inputdata dataNoIO
+                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-4 results 
                 ln -sfn ../../src 
                 ln -sfn ../../srcPages 
                 '''
@@ -60,14 +60,14 @@ pipeline {
                 echo 'Preparing build folders for Haxe nightly'
                 sh '''
                 cd versions/Haxe-nightly
-                ln -sfn ../../benchmark.sh . 
+                ln -sfn ../../benchmarkNoIO.sh benchmark.sh
                 ln -sfn ../../build 
                 ln -sfn ../../buildAll.hxml . 
                 ln -sfn ../../buildConvertCsv.hxml 
                 ln -sfn ../../haxe_libraries/ haxe_libraries 
                 ln -sfn ../../haxelib.json . 
-                ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
-                ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-nightly results 
+                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/inputdata dataNoIO
+                ln -sfn /home/benchmarkdata/formatter-benchmark-noio/Haxe-nightly results 
                 ln -sfn ../../src 
                 ln -sfn ../../srcPages 
                 '''

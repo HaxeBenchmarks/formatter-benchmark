@@ -1,2 +1,1 @@
-build/common.hxml
 -python out/formatter.py

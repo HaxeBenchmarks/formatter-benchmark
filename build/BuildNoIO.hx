@@ -4,7 +4,7 @@ import haxe.macro.Compiler;
 /**
 	helper class to build everything, avoids `--next`
 **/
-class Build {
+class BuildNoIO {
 	/**
 		run all build files
 	**/
@@ -30,7 +30,7 @@ class Build {
 	**/
 	public static function callLix(buildFile:String, title:String) {
 		var startTime = Timer.stamp();
-		var exitCode:Int = Sys.command("npx", ["haxe", "build/common.hxml", buildFile]);
+		var exitCode:Int = Sys.command("npx", ["haxe", "build/commonNoIO.hxml", buildFile]);
 		var exitText:String = "";
 		if (exitCode != 0) {
 			exitText = ' - exitCode: $exitCode';

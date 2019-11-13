@@ -1,0 +1,10 @@
+-lib tokentree
+-lib haxeparser
+-lib hxparse
+-lib json2object
+-lib hxargs
+-lib formatter
+
+-cp src
+
+-main NoIOMain

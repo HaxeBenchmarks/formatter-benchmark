@@ -1,3 +1,2 @@
-build/common.hxml
 -D php7
 -php out/php
