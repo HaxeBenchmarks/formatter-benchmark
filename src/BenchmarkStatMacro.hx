@@ -1,6 +1,9 @@
+import haxe.io.Path;
 import haxe.macro.Compiler;
 import haxe.macro.Context;
 import haxe.macro.Expr;
+import sys.FileSystem;
+import sys.io.File;
 
 class BenchmarkStatMacro {
 	#if macro
@@ -30,45 +33,79 @@ class BenchmarkStatMacro {
 
 		return newFields;
 	}
+	#end
 
-	static function mapOutput2Target():String {
+	macro public static function mapOutput2Target():Expr {
 		var output = Compiler.getOutput();
 
 		if (~/\.n$/.match(output)) {
-			return "Neko";
+			return macro "Neko";
 		}
 		if (~/\.es6\.js$/.match(output)) {
-			return "NodeJS (ES6)";
+			return macro "NodeJS (ES6)";
 		}
 		if (~/\.js$/.match(output)) {
-			return "NodeJS";
+			return macro "NodeJS";
 		}
 		if (~/\.hl$/.match(output)) {
-			return "Hashlink";
+			return macro "Hashlink";
 		}
 		if (~/\.c$/.match(output)) {
-			return "Hashlink/C";
+			return macro "Hashlink/C";
 		}
 		if (~/cpp$/.match(output)) {
-			return "C++";
+			return macro "C++";
 		}
 		if (~/cs$/.match(output)) {
-			return "C#";
+			return macro "C#";
 		}
 		if (~/java$/.match(output)) {
-			return "Java";
+			return macro "Java";
 		}
 		if (~/jvm$/.match(output)) {
-			return "JVM";
+			return macro "JVM";
 		}
 		if (~/php$/.match(output)) {
-			return "PHP";
+			return macro "PHP";
 		}
 		if (~/\.py$/.match(output)) {
-			return "Python";
+			return macro "Python";
 		}
 
-		return "eval";
+		return macro "eval";
 	}
-	#end
+
+	macro public static function getSources(path:String):Expr {
+		#if !display
+		try {
+			var sources:Array<String> = [];
+
+			var folderFunc:(path:String) -> Void;
+			folderFunc = function(path:String):Void {
+				for (f in FileSystem.readDirectory(path)) {
+					var fileName:String = Path.join([path, f]);
+					if (FileSystem.isDirectory(fileName)) {
+						folderFunc(fileName);
+						continue;
+					}
+					sources.push(File.getContent(fileName));
+				}
+			}
+			folderFunc(path);
+
+			return macro $v{sources};
+		} catch (e:Any) {
+			var version:String = "dev";
+			return macro $v{version};
+		}
+		#else
+		return macro [
+			"
+class Main {
+	public function new() {
+    }
+}"
+		];
+		#end
+	}
 }

@@ -1,3 +1,2 @@
-build/common.hxml
 -hl out/hl/formatter.c
 -cmd gcc -O3 -o out/hl/formatterCLI -std=c11 -I out/hl $HASHLINK_CC_PARAMS out/hl/formatter.c -lhl
