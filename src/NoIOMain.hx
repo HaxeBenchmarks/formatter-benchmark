@@ -29,7 +29,7 @@ class NoIOMain {
 	function getSources(path:String):Array<String> {
 		var sources:Array<String> = [];
 
-		var folderFunc:(path:String) -> Void;
+		var folderFunc:String->Void;
 		folderFunc = function(path:String):Void {
 			for (f in FileSystem.readDirectory(path)) {
 				var fileName:String = Path.join([path, f]);
