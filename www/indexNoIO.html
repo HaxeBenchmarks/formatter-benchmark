@@ -10,15 +10,16 @@
     <h1>Haxe Formatter Benchmark (no I/O)</h1>
     <p>
         <ul>
-            <li>benchmark runs use lix and run on Haxe 3.4.7, Haxe 4.0.2 and Haxe 4 nightly</li>
+            <li>benchmark runs use lix and run on Haxe 3.4.7, Haxe 4.0.3 and Haxe 4 nightly</li>
             <li>a cron job triggers builds multiple times a day</li>
             <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Hashlink/C, Java, JVM, eval, Neko, NodeJS, PHP and Python
                 targets</li>
             <li>JVM and eval are not available on Haxe 3 (Haxe 4 only)</li>
             <li>Haxe 3 uses Hashlink 1.1, Haxe 4 Hashlink 1.10</li>
             <li>NodeJS compilation is run twice, with and without "-D js-es=6" (Haxe 4 builds only)</li>
-            <li>each target formats a fixed set of input data compiled into the binary</li>
+            <li>each target formats a fixed set of input data that is loaded into memory prior to measuring</li>
             <li>results update after every build (page doesn't automatically reload)</li>
+            <li>sources available on <a href="https://github.com/AlexHaxe/haxe-formatter-benchmark/tree/lixify">github</a></li>
         </ul>
     </p>
 
@@ -78,8 +79,8 @@
             <th>what</th>
         </tr>
         <tr>
-            <td>2019-11-11 18:00:00</td>
-            <td>upgrade Haxe 4.0.1 to Haxe 4.0.2</td>
+            <td>2019-11-29 22:00:00</td>
+            <td>upgrade Haxe 4.0.2 to Haxe 4.0.3</td>
         </tr>
     </table>
 
