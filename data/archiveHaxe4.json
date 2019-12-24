@@ -16978,5 +16978,71 @@
       }
     ],
     "date": "2019-12-23 23:35:27"
+  },
+  {
+    "haxeVersion": "4.1.0-rc.1+a6ae54ba3",
+    "targets": [
+      {
+        "name": "NodeJS",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 20.734
+      },
+      {
+        "name": "NodeJS (ES6)",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 20.847
+      },
+      {
+        "name": "Java",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 18.896
+      },
+      {
+        "name": "JVM",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 31.592
+      },
+      {
+        "name": "Hashlink",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 19.236
+      },
+      {
+        "name": "Hashlink/C",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 17.69
+      },
+      {
+        "name": "C#",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 23.184
+      },
+      {
+        "name": "PHP",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 81.203
+      },
+      {
+        "name": "Neko",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 91.671
+      },
+      {
+        "name": "Python",
+        "outputLines": 363608,
+        "inputLines": 363377,
+        "time": 186.039
+      }
+    ],
+    "date": "2019-12-24 23:37:00"
   }
 ]
