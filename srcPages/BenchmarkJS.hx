@@ -25,6 +25,8 @@ class BenchmarkJS {
 	var withHaxe3:Bool;
 	var withHaxe4:Bool;
 	var withHaxeNightly:Bool;
+	var last20Days:Bool;
+
 	var chartObjects:Map<String, Any>;
 
 	public static function main() {
@@ -45,6 +47,7 @@ class BenchmarkJS {
 		withHaxe3 = true;
 		withHaxe4 = true;
 		withHaxeNightly = true;
+		last20Days = true;
 		chartObjects = new Map<String, Any>();
 		requestArchivedData();
 		new JQuery(Browser.document).ready(function() {
@@ -57,6 +60,7 @@ class BenchmarkJS {
 		new JQuery("#withHaxe3").change(changeWithHaxe3);
 		new JQuery("#withHaxe4").change(changeWithHaxe4);
 		new JQuery("#withHaxeNightly").change(changeWithHaxeNightly);
+		new JQuery("#last20Days").change(changeLast20Days);
 	}
 
 	function changeOnlyAverage(event:Event) {
@@ -92,6 +96,11 @@ class BenchmarkJS {
 
 	function changeWithHaxeNightly(event:Event) {
 		withHaxeNightly = new JQuery("#withHaxeNightly").is(":checked");
+		showData();
+	}
+
+	function changeLast20Days(event:Event) {
+		last20Days = new JQuery("#last20Days").is(":checked");
 		showData();
 	}
 
@@ -435,7 +444,12 @@ class BenchmarkJS {
 		datasetData.sort(sortDate);
 		datasetData = mergeTimes(datasetData);
 
+		var now:Float = Date.now().getTime();
+		now -= 20 * 24 * 60 * 60;
 		for (item in datasetData) {
+			if (!showDate(item.date, now)) {
+				continue;
+			}
 			data.labels.push(item.date);
 			for (graph in graphDataSets) {
 				if (graph.movingAverage) {
@@ -491,6 +505,15 @@ class BenchmarkJS {
 		var chart:Any = chartObjects.get(target);
 		untyped chart.data = data;
 		Syntax.code("{0}.update()", chart);
+	}
+
+	function showDate(dateVal:String, onlyAfter:Float):Bool {
+		if (!last20Days) {
+			return true;
+		}
+		var date:Date = Date.fromString(dateVal);
+		var time:Float = date.getTime();
+		return (time > onlyAfter);
 	}
 
 	function mergeTimes(datasetData:Array<HistoricalDataPoint>):Array<HistoricalDataPoint> {
