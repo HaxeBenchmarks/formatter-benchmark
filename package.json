@@ -19,7 +19,7 @@
     "url": "https://github.com/AlexHaxe/haxe-formatter-benchmark/issues"
   },
   "devDependencies": {
-    "lix": "^15.5.4"
+    "lix": "^15.8.5"
   },
   "homepage": "https://github.com/AlexHaxe/haxe-formatter-benchmark#readme"
 }
