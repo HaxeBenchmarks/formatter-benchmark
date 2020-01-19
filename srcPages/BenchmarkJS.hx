@@ -445,7 +445,7 @@ class BenchmarkJS {
 		datasetData = mergeTimes(datasetData);
 
 		var now:Float = Date.now().getTime();
-		now -= 20 * 24 * 60 * 60;
+		now -= 20 * 24 * 60 * 60 * 1000;
 		for (item in datasetData) {
 			if (!showDate(item.date, now)) {
 				continue;
