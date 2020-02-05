@@ -18100,5 +18100,71 @@
         "inputLines": 363253
       }
     ]
+  },
+  {
+    "date": "2020-02-05 00:01:36",
+    "haxeVersion": "3.4.7",
+    "targets": [
+      {
+        "outputLines": 365243,
+        "name": "C++",
+        "time": 13.225,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "NodeJS",
+        "time": 21.252,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "NodeJS (ES6)",
+        "time": 21.221,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "Java",
+        "time": 21.794,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "JVM",
+        "time": 21.749,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365283,
+        "name": "Hashlink",
+        "time": 24.519,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "C#",
+        "time": 39.654,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "PHP",
+        "time": 277.849,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "Neko",
+        "time": 96.535,
+        "inputLines": 363832
+      },
+      {
+        "outputLines": 365243,
+        "name": "Python",
+        "time": 183.72,
+        "inputLines": 363832
+      }
+    ]
   }
 ]
