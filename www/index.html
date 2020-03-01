@@ -8,23 +8,21 @@
 
 <body>
     <h1>Haxe Formatter Benchmark</h1>
-    <p>
-        <ul>
-            <li>benchmark runs use lix and run on Haxe 3.4.7, Haxe 4.0.5 and Haxe 4 nightly</li>
-            <li>a cron job triggers builds multiple times a day</li>
-            <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Hashlink/C, Java, JVM, eval, Neko, NodeJS, PHP and Python
-                targets</li>
-            <li>JVM and eval are not available on Haxe 3 (Haxe 4 only)</li>
-            <li>Haxe 3 uses Hashlink 1.1, Haxe 4 Hashlink 1.10</li>
-            <li>NodeJS compilation is run twice, with and without "-D js-es=6" (Haxe 4 builds only)</li>
-            <li>each target formats a fixed set of input files consisting of Haxe std, Openfl and Lime sources and reports total runtime</li>
-            <li>test runs reset input files after each single target's run</li> 
-            <li>results update after every build (page doesn't automatically reload)</li>
-            <li>sources available here: <a href="https://github.com/HaxeBenchmarks/formatter-benchmark">https://github.com/HaxeBenchmarks/formatter-benchmark</a></li>
-        </ul>
-    </p>
+    <ul class="benchmarkDescription">
+        <li>benchmark runs use lix and run on Haxe 3.4.7, Haxe 4.0.5 and Haxe 4 nightly</li>
+        <li>a cron job triggers builds multiple times a day</li>
+        <li>each build job compiles Haxe formatter to C++, C#, Hashlink, Hashlink/C, Java, JVM, eval, Neko, NodeJS, PHP and Python
+            targets</li>
+        <li>JVM and eval are not available on Haxe 3 (Haxe 4 only)</li>
+        <li>Haxe 3 uses Hashlink 1.1, Haxe 4 Hashlink 1.10</li>
+        <li>NodeJS compilation is run twice, with and without "-D js-es=6" (Haxe 4 builds only)</li>
+        <li>each target formats a fixed set of input files consisting of Haxe std, Openfl and Lime sources and reports total runtime</li>
+        <li>test runs reset input files after each single target's run</li> 
+        <li>results update after every build (page doesn't automatically reload)</li>
+        <li>sources available here: <a href="https://github.com/HaxeBenchmarks/formatter-benchmark">https://github.com/HaxeBenchmarks/formatter-benchmark</a></li>
+    </ul>
 
-    <form>
+    <form class="benchmarkFilter">
         <select id="average">
             <option value="none">none</option>
             <option value="SMA" selected>simple moving average</option>
@@ -46,35 +44,23 @@
         <input id="last20Days" name="last20Days" type="checkbox" value="true" checked>
     </form>
 
-    <div stlye="display: flex; flex-wrap: wrap; width:100%;">
-        <canvas id="latestBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="linesOfCode" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="cppBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="csharpBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="javaBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="jvmBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="hlBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="hlcBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="nodeBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="nodeES6Benchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="nekoBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="evalBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="phpBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
-        <canvas id="pythonBenchmarks" style="float:left; width: 50%; height: 400px; max-width: 50%;" height="400"
-            class="chartjs-render-monitor"></canvas>
+    <span class="lowerValuesBetterPerformance">lower values indicate a better performance</span>
+
+    <div class="benchmarkGraphs">
+        <canvas id="latestBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="linesOfCode" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="cppBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="csharpBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="javaBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="jvmBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="hlBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="hlcBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="nodeBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="nodeES6Benchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="nekoBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="evalBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="phpBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="pythonBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
     </div>
 
     <table class="historyLog">
