@@ -1,5 +1,4 @@
--cp srcPages
-
 -lib json2object
+-lib benchmark-helper
 
 -x CsvToJson

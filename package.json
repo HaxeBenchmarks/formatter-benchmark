@@ -4,7 +4,7 @@
   "description": "Haxe benchmark based on haxe-formatter",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlexHaxe/haxe-formatter-benchmark.git"
+    "url": "git+https://github.com/HaxeBenchmarks/haxe-formatter-benchmark.git"
   },
   "keywords": [
     "benchmark",
@@ -16,10 +16,10 @@
     "email": "Alexander.Blum@gmail.com"
   },
   "bugs": {
-    "url": "https://github.com/AlexHaxe/haxe-formatter-benchmark/issues"
+    "url": "https://github.com/HaxeBenchmarks/haxe-formatter-benchmark/issues"
   },
   "devDependencies": {
     "lix": "^15.8.5"
   },
-  "homepage": "https://github.com/AlexHaxe/haxe-formatter-benchmark#readme"
+  "homepage": "https://github.com/HaxeBenchmarks/haxe-formatter-benchmark#readme"
 }
