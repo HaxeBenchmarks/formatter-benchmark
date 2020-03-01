@@ -1,7 +1,7 @@
-import haxe.io.Path;
-import sys.io.File;
-import sys.FileSystem;
 import haxe.Timer;
+import haxe.io.Path;
+import sys.FileSystem;
+import sys.io.File;
 import formatter.Formatter;
 import formatter.config.Config;
 import tokentree.TokenTreeBuilder.TokenTreeEntryPoint;
@@ -45,7 +45,7 @@ class NoIOMain {
 	}
 
 	function printStats(duration:Float) {
-		var target = BenchmarkStatMacro.macroMapOutput2Target();
+		var target = HaxeVersionsMacro.macroMapOutput2Target();
 		var version:String = FormatterVersion.getFormatterVersion();
 		Sys.println('$target;$version;${Std.string(formatter.FormatStats.totalLinesOrig)};'
 			+ '${Std.string(formatter.FormatStats.totalLinesFormatted)};${Std.string(duration)}');

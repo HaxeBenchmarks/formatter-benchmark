@@ -14,7 +14,6 @@ versions/Haxe-*/haxelib.json
 versions/Haxe-*/results
 versions/Haxe-*/results.csv
 versions/Haxe-*/src
-versions/Haxe-*/srcPages
 versions/Haxe-*/buildConvertCsv.hxml
 versions/Haxe-*/CsvToJson.n
 dataNoIO/
