@@ -4,6 +4,7 @@
 -lib json2object
 -lib hxargs
 -lib formatter
+-lib benchmark-helper
 
 -cp src
 

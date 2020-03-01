@@ -1,3 +1,10 @@
+import haxe.io.Path;
+import haxe.macro.Compiler;
+import haxe.macro.Context;
+import haxe.macro.Expr;
+import sys.FileSystem;
+import sys.io.File;
+
 class BenchmarkStatMacro {
 	#if macro
 	public static function init() {
