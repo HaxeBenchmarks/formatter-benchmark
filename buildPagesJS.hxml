@@ -1,8 +1,0 @@
--cp srcPages
-
--lib hx3compat
--lib json2object
-
--js js/benchmark.new.js
-
--main BenchmarkJS

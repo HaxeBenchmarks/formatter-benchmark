@@ -39,7 +39,6 @@ pipeline {
                 ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
                 ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-3 results 
                 ln -sfn ../../src 
-                ln -sfn ../../srcPages 
                 '''
 
                 echo 'Preparing build folders for Haxe 4'
@@ -54,7 +53,6 @@ pipeline {
                 ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
                 ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-4 results 
                 ln -sfn ../../src 
-                ln -sfn ../../srcPages 
                 '''
 
                 echo 'Preparing build folders for Haxe nightly'
@@ -69,7 +67,6 @@ pipeline {
                 ln -sfn /home/benchmarkdata/formatter-benchmark/inputdata data
                 ln -sfn /home/benchmarkdata/formatter-benchmark/Haxe-nightly results 
                 ln -sfn ../../src 
-                ln -sfn ../../srcPages 
                 '''
             }
         }
