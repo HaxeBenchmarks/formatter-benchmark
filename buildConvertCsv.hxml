@@ -1,4 +1,4 @@
 -lib json2object
 -lib benchmark-helper
 
--x CsvToJson
+--run CsvToJson
