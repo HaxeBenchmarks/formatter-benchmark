@@ -3,6 +3,7 @@
 <head>
     <title>Haxe Formatter Benchmarks</title>
     <link href="css/Chart.min.css" type="text/css" rel="stylesheet" />
+    <link href="css/themes/base/all.css" type="text/css" rel="stylesheet" />
     <link href="css/benchmark.css" type="text/css" rel="stylesheet" />
 </head>
 
@@ -23,25 +24,65 @@
     </ul>
 
     <form class="benchmarkFilter">
-        <select id="average">
-            <option value="none">none</option>
-            <option value="SMA" selected>simple moving average</option>
-            <option value="EMA">exponential moving average</option>
-        </select>
-        <label for="averageWindow">average window size</label>
-        <input id="averageWindow" name="averageWindow" type="number" min="2" value="6">
-        <label for="onlyAverage">show only average</label>
-        <input id="onlyAverage" name="onlyAverage" type="checkbox" value="true">
-        <br />
-        <label for="withHaxe3">show Haxe 3 data</label>
-        <input id="withHaxe3" name="withHaxe3" type="checkbox" value="true" checked>
-        <label for="withHaxe4">show Haxe 4 data</label>
-        <input id="withHaxe4" name="withHaxe4" type="checkbox" value="true" checked>
-        <label for="withHaxeNightly">show Haxe nightly data</label>
-        <input id="withHaxeNightly" name="withHaxeNightly" type="checkbox" value="true" checked>
-        <br />
-        <label for="last20Days">only last 20 days</label>
-        <input id="last20Days" name="last20Days" type="checkbox" value="true" checked>
+        <table>
+            <tr>
+                <th>Datasets</th>
+                <td>
+                    <ul class="filterDatasets">
+                        <li>
+                            <label for="withHaxe3">Haxe 3</label><br />
+                            <input id="withHaxe3" name="withHaxe3" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="withHaxe4">Haxe 4</label><br />
+                            <input id="withHaxe4" name="withHaxe4" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="withHaxeNightly">Haxe nightly</label><br />
+                            <input id="withHaxeNightly" name="withHaxeNightly" type="checkbox" value="true" checked>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Average</th>
+                <td>
+                    <ul class="filterAverage">
+                        <li>
+                            <br />
+                            <select id="average">
+                                <option value="none">none</option>
+                                <option value="SMA" selected>simple moving average</option>
+                                <option value="EMA">exponential moving average</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label for="averageWindow">window size</label><br />
+                            <input id="averageWindow" name="averageWindow" type="number" min="2" value="6">
+                        </li>
+                        <li>
+                            <label for="onlyAverage">only averages</label><br />
+                            <input id="onlyAverage" name="onlyAverage" type="checkbox" value="true">
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>Range</th>
+                <td>
+                    <ul class="filterRange">
+                        <li>
+                            <label for="startDate">start date</label><br />
+                            <input id="startDate" name="startDate" type="text">
+                        </li>
+                        <li>
+                            <label for="endDate">end date</label><br />
+                            <input id="endDate" name="endDate" type="text">
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
     </form>
 
     <div class="benchmarkGraphs">
@@ -86,6 +127,7 @@
 
 </body>
 <script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery-ui.min.js" type="text/javascript"></script>
 <script src="js/Chart.min.js" type="text/javascript"></script>
 <script src="js/benchmark.js" type="text/javascript"></script>
 </html>
