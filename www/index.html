@@ -82,12 +82,71 @@
                     </ul>
                 </td>
             </tr>
+            <tr>
+                <th>Targets</th>
+                <td>
+                    <div class="filterAllTargets">
+                        <label for="allTargets">all targets</label><br />
+                        <input id="allTargets" name="allTargets" type="checkbox" value="true" checked>
+                    </div>
+                    <ul class="filterTargets">
+                        <li>
+                            <label for="targetCpp">C++</label><br />
+                            <input id="targetCpp" name="targetCpp" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetCSharp">C#</label><br />
+                            <input id="targetCSharp" name="targetCSharp" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetEval">eval</label><br />
+                            <input id="targetEval" name="targetEval" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetHashlink">Hashlink</label><br />
+                            <input id="targetHashlink" name="targetHashlink" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetHashlinkC">Hashlink/C</label><br />
+                            <input id="targetHashlinkC" name="targetHashlinkC" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetJava">Java</label><br />
+                            <input id="targetJava" name="targetJava" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetJvm">Jvm</label><br />
+                            <input id="targetJvm" name="targetJvm" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetNeko">Neko</label><br />
+                            <input id="targetNeko" name="targetNeko" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetNodeJs">NodeJS</label><br />
+                            <input id="targetNodeJs" name="targetNodeJs" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetNodeJsES6">NodeJS (ES6)</label><br />
+                            <input id="targetNodeJsES6" name="targetNodeJsES6" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetPHP">PHP</label><br />
+                            <input id="targetPHP" name="targetPHP" type="checkbox" value="true" checked>
+                        </li>
+                        <li>
+                            <label for="targetPython">Python</label><br />
+                            <input id="targetPython" name="targetPython" type="checkbox" value="true" checked>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
         </table>
     </form>
 
     <div class="benchmarkGraphs">
         <canvas id="latestBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
-        <canvas id="linesOfCode" height="400" class="chartjs-render-monitor"></canvas>
+        <canvas id="offlinesOfCode" height="400" class="chartjs-render-monitor"></canvas>
         <canvas id="cppBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
         <canvas id="csharpBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
         <canvas id="javaBenchmarks" height="400" class="chartjs-render-monitor"></canvas>
