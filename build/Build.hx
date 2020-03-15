@@ -10,7 +10,7 @@ class Build {
 	**/
 	public static function main() {
 		callLix("build/buildCpp.hxml", "C++");
-		callLix("build/buildCppGen.hxml", "C++ (HXCPP_GC_GENERATIONAL)");
+		callLix("build/buildCppGCGen.hxml", "C++ (HXCPP_GC_GENERATIONAL)");
 		callLix("build/buildCs.hxml", "C#");
 		callLix("build/buildJava.hxml", "Java");
 		callLix("build/buildJvm.hxml", "JVM");
