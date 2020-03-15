@@ -17,6 +17,7 @@
         <li>JVM and eval are not available on Haxe 3 (Haxe 4 only)</li>
         <li>Haxe 3 uses Hashlink 1.1, Haxe 4 Hashlink 1.10</li>
         <li>NodeJS compilation is run twice, with and without "-D js-es=6" (Haxe 4 builds only)</li>
+        <li>C++ compilation is run twice, with and without "-D HXCPP_GC_GENERATIONAL"</li>
         <li>each target formats a fixed set of input files consisting of Haxe std, Openfl and Lime sources and reports total runtime</li>
         <li>test runs reset input files after each single target's run</li> 
         <li>results update after every build (page doesn't automatically reload)</li>
@@ -173,7 +174,7 @@
         </tr>
         <tr>
             <td>2020-03-15 15:00:00</td>
-            <td>added C++ (HXCPP_GC_GENERATIONAL) run</td>
+            <td>added C++ (GC Gen) run</td>
         </tr>
         <tr>
             <td>2020-03-01 03:00:00</td>
