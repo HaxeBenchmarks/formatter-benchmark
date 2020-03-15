@@ -1,0 +1,2 @@
+-D HXCPP_GC_GENERATIONAL
+-cpp out/cppGCGen

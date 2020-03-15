@@ -3,6 +3,7 @@
 source benchmark.env
 
 ./out/cpp/NoIOMain
+./out/cppGCGen/NoIOMain
 node out/formatter.js
 node out/formatter.es6.js
 java -jar out/java/NoIOMain.jar

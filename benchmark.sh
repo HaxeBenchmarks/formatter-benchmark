@@ -11,6 +11,8 @@ function resetGit {
 resetGit
 ./out/cpp/Cli $DATA
 resetGit
+./out/cppGCGen/Cli $DATA
+resetGit
 node out/formatter.js $DATA
 resetGit
 node out/formatter.es6.js $DATA
