@@ -13,6 +13,8 @@ resetGit
 resetGit
 ./out/cppGCGen/Cli $DATA
 resetGit
+haxelib run hxcpp out/formatter.cppia 
+resetGit
 node out/formatter.js $DATA
 resetGit
 node out/formatter.es6.js $DATA
@@ -34,8 +36,8 @@ resetGit
 neko out/formatter.n $DATA
 resetGit
 python3 out/formatter.py $DATA
-# resetGit
-# lua out/formatter.lua $DATA
+resetGit
+lua out/formatter.lua $DATA
 
 # second run to smooth graphs a little
 resetGit

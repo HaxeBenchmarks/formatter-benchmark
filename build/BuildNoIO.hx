@@ -11,6 +11,7 @@ class BuildNoIO {
 	public static function main() {
 		callLix("build/buildCpp.hxml", "C++");
 		callLix("build/buildCppGCGen.hxml", "C++ (HXCPP_GC_GENERATIONAL)");
+		callLix("build/buildCppia.hxml", "Cppia");
 		callLix("build/buildCs.hxml", "C#");
 		callLix("build/buildJava.hxml", "Java");
 		callLix("build/buildJvm.hxml", "JVM");
@@ -21,6 +22,7 @@ class BuildNoIO {
 		callLix("build/buildNeko.hxml", "Neko");
 		callLix("build/buildPhp.hxml", "PHP7");
 		callLix("build/buildPython.hxml", "Python");
+		callLix("build/buildLua.hxml", "Lua");
 	}
 
 	/**

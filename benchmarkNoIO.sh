@@ -4,6 +4,7 @@ source benchmark.env
 
 ./out/cpp/NoIOMain
 ./out/cppGCGen/NoIOMain
+haxelib run hxcpp out/formatter.cppia 
 node out/formatter.js
 node out/formatter.es6.js
 java -jar out/java/NoIOMain.jar
@@ -15,8 +16,7 @@ haxe build/commonNoIO.hxml --run NoIOMain
 php out/php/index.php
 neko out/formatter.n
 python3 out/formatter.py
-# 
-# lua out/formatter.lua
+lua out/formatter.lua
 
 # second run to smooth graphs a little
 ./out/cpp/NoIOMain
